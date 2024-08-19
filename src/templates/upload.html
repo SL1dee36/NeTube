@@ -1,0 +1,18 @@
+<!-- src/templates/upload.html -->
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Загрузить видео</title>
+</head>
+<body>
+    <h1>Загрузить видео</h1>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="text" name="title" placeholder="Название видео">
+        <textarea name="description" placeholder="Описание видео"></textarea>
+        <input type="file" name="file">
+        <button type="submit">Загрузить</button>
+    </form>
+</body>
+</html>
