@@ -5,12 +5,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ video.title }}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='video_page.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
 </head>
 <body>
+    <header>
+        <h1><a href="/">NeTube</a></h1> 
+        <a href="/login">
+            {% if current_user %}
+                <img src="{{ url_for('serve_avatars', filename=current_user.avatar) if current_user.avatar else url_for('serve_avatars', filename='plus.png') }}" alt="Аватар" width="30" height="30">
+            {% else %}
+                <img src="{{ url_for('serve_avatars', filename='question.png') }}" alt="Войти" width="30" height="30">
+            {% endif %}
+        </a>
+    </header>
+
     <div class="video-container">
         <video width="640" height="360" controls>
-            <source src="{{ url_for('serve_static', filename=video.url) }}" type="video/mp4">
+            <source src="{{ url_for('serve_videos', filename=video.url) }}" type="video/mp4">
             Your browser does not support the video tag.
         </video>
 
@@ -23,7 +36,7 @@
                     <button>Like ({{ video.likes }})</button>
                 </a>
                 <a href="{{ url_for('dislike_video', video_name=video.url) }}">
-                    <button>Dislike</button>
+                    <button>Dislike ({{ video.dislikes }})</button>
                 </a>
             </div>
         </div>

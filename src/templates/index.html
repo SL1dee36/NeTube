@@ -5,13 +5,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NeTube</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='index_page.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
-        <h1>NeTube</h1>
-        <a href="/login">Регистрация/Авторизация</a>
+        <h1><a href="/">NeTube</a></h1> 
+        <a href="/login">
+            {% if current_user %}
+                <img src="{{ url_for('serve_avatars', filename=current_user.avatar) if current_user.avatar else url_for('serve_avatars', filename='plus.png') }}" alt="Аватар" width="30" height="30">
+            {% else %}
+                <img src="{{ url_for('serve_avatars', filename='question.png') }}" alt="Войти" width="30" height="30">
+            {% endif %}
+        </a>
     </header>
 
     <div class="video-container">
@@ -19,11 +25,9 @@
         <div class="video-preview">
             <a href="{{ url_for('video', video_name=video.url) }}">
                 <img src="{{ url_for('serve_thumbnails', filename=video.url[:-4] + '.jpg') }}" alt="{{ video.title }}" width="320" height="180">
-                
-            
             </a>
             <h3>{{ video.title }}</h3>
-            <p>Автор: <a href="{{ url_for('channel', username=video.author.username) }}">@{{ video.author.username }}</a></p>
+            <p>Автор: <a href="{{ url_for('channel', username=video.author.username) }}">@{{ Markup(video.author.username) }}</a></p>
             <p>Лайки: {{ video.likes }}</p>
         </div>
         {% endfor %}

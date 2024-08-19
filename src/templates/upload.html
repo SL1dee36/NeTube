@@ -1,17 +1,78 @@
-<!-- src/templates/upload.html -->
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='index_page.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
     <title>Загрузить видео</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form {
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type="file"] {
+            margin-bottom: 15px;
+        }
+
+        button[type="submit"] {
+            padding: 12px 20px;
+            background-color: #448aff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #3367d6;
+        }
+    </style>
+
+    <h1><a href="/">NeTube</a></h1> 
+
 </head>
 <body>
     <h1>Загрузить видео</h1>
     <form action="/upload" method="post" enctype="multipart/form-data">
-        <input type="text" name="title" placeholder="Название видео">
-        <textarea name="description" placeholder="Описание видео"></textarea>
+        <label for="title">Название видео:</label>
+        <input type="text" id="title" name="title" placeholder="Введите название видео">
+
+        <label for="description">Описание:</label>
+        <textarea id="description" name="description" placeholder="Добавьте описание видео"></textarea>
+
         <input type="file" name="file">
+
         <button type="submit">Загрузить</button>
     </form>
 </body>

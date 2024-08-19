@@ -1,0 +1,45 @@
+/* src/static/video_page.css */
+.video-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.video-info {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.likes-dislikes {
+    margin-top: 10px;
+}
+
+.likes-dislikes button {
+    background-color: #ccc;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+}
+
+header h1 {
+    margin: 0;
+}
+
+header a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+}
+
+header img {
+    border-radius: 50%;
+}
