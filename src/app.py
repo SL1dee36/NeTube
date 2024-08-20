@@ -8,6 +8,7 @@ from markupsafe import Markup
 from werkzeug.utils import secure_filename
 import base64
 from flask import current_app as app
+from fuzzywuzzy import fuzz, process # Импортируем fuzzywuzzy
 from os import system as s
 
 s('cls')
@@ -43,11 +44,28 @@ def get_current_user():
         return User.query.get(user_id)
     return None
 
-@app.route('/')
+
+
+@app.route('/', methods=['GET', 'POST'])
 def index():
+    current_user = get_current_user()
     videos = Video.query.order_by(Video.likes.desc()).all()
-    current_user = get_current_user() 
+    if request.method == 'POST':
+        search_query = request.form.get('search_query')
+        if search_query:
+            app.logger.debug(f"Search query: {search_query}")  # Логируем запрос
+
+            # # Временно убираем FuzzyWuzzy
+            # videos = Video.query.filter(Video.title.ilike(f"%{search_query}%")).order_by(Video.likes.desc()).all()
+
+            matches = process.extract(search_query, [video.title for video in videos], scorer=fuzz.token_sort_ratio)
+            app.logger.debug(f"FuzzyWuzzy matches: {matches}")  # Логируем совпадения
+            filtered_videos = [video for video, score in matches if score >= 60]
+            return render_template('index.html', videos=filtered_videos, Markup=Markup, current_user=current_user)
     return render_template('index.html', videos=videos, Markup=Markup, current_user=current_user)
+
+
+
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
@@ -77,7 +95,15 @@ def upload():
 def video(video_name):
     video = Video.query.filter_by(url=video_name).first_or_404()
     current_user = get_current_user()
-    return render_template('video.html', video=video, Markup=Markup, current_user=current_user)
+
+    # Логика выбора рекомендуемых видео (пример):
+    related_videos = Video.query.filter(Video.id != video.id).limit(9).all()  # Выбираем 5 других видео
+    
+    return render_template('video.html', 
+                           video=video, 
+                           Markup=Markup, 
+                           current_user=current_user,
+                           related_videos=related_videos) 
 
 @app.route('/static/videos/<path:filename>')
 def serve_videos(filename):
@@ -119,6 +145,7 @@ def login():
             return render_template('login.html', error="Неверный логин или пароль")
     current_user = get_current_user()
     return render_template('login.html', current_user=current_user)
+
 
 @app.route('/logout')
 def logout():

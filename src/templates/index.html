@@ -19,7 +19,11 @@
 <body>
     <header>
         <h1><a href="/">NeTube</a></h1> 
-        
+        <form action="/" method="POST" class="search-container">
+            <input type="text" name="search_query" placeholder="Поиск...">
+            <button type="submit">Искать</button>
+        </form>
+
         {% if current_user %}
             <a href="{{ url_for('channel', username=current_user.username) }}">
                 <img src="{{ url_for('serve_avatars', filename=current_user.avatar) if current_user.avatar else url_for('serve_avatars', filename='plus.png') }}" alt="Аватар" width="30" height="30">
