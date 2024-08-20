@@ -37,8 +37,8 @@ header nav a {
 
 header nav a img {
     border-radius: 50%;
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
 }
 
 .channel-container {
@@ -140,7 +140,7 @@ header a:hover, header a:active {
 }
 
 .video-preview:hover img {
-    transform: scale(1.05);
+    transform: scale(1.01);
 }
 
 .video-preview h3 {
@@ -163,4 +163,30 @@ header a:hover, header a:active {
     margin: 0;
     font-size: 14px;
     color: #666;
+}
+
+.subscribe-button {
+    background-color: #ff0000; /* Синий цвет */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    border-radius: 5px; /* Скругленные углы */
+    cursor: pointer;
+}
+
+.unsubscribe-button {
+    background-color: #3e3e3e; /* Красный цвет */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    border-radius: 5px; /* Скругленные углы */
+    cursor: pointer;
 }

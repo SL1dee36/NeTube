@@ -58,10 +58,10 @@
                         </a>
                         <div>
                             <a href="{{ url_for('video', video_name=related_video.url) }}">
-                                <span>{{ related_video.title }}</span>
+                                <span><b>{{ related_video.title }}</b></span>
                             </a>
 
-                            <p><a href="{{ url_for('channel', username=related_video.author.username) }}">@{{ Markup(related_video.author.username) }}</a> • {{ related_video.likes }} Likes </p>
+                            <p style="color:#242424;"><br><a href="{{ url_for('channel', username=related_video.author.username) }}">@{{ Markup(related_video.author.username) }}</a> • {{ related_video.likes }} Likes </p>
                         </div>
                     </li>
                 {% endfor %}

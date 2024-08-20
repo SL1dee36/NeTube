@@ -24,19 +24,23 @@ header h1 {
 header .search-container {
     display: flex;
     align-items: center;
+    vertical-align: center;
     margin: 0 auto; /* Центрируем контейнер */
 }
 
 header .search-container input[type="text"] {
     padding: 8px;
+    width: 400px;
+    vertical-align: center;
     border: 1px solid #ccc;
     border-radius: 5px 0 0 5px;
-    font-size: 16px;
+    font-size: 13px;
 }
 
 header .search-container button {
-    background-color: #f0f0f0;
+    background-color: #ffffff;
     border: 1px solid #ccc;
+    vertical-align: center;
     border-radius: 0 5px 5px 0;
     padding: 8px 12px;
     cursor: pointer;
@@ -61,8 +65,8 @@ header a:hover, header a:active {
 
 header img {
     border-radius: 50%;
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
 }
 
 .video-container {
@@ -98,7 +102,7 @@ header img {
 }
 
 .video-preview:hover img {
-    transform: scale(1.05);
+    transform: scale(1.01);
 }
 
 .video-preview .video-info {

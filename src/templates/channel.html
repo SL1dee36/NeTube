@@ -16,19 +16,19 @@
                 </a> -->
                 <!-- <a href="{{ url_for('channel', username=current_user.username) }}">Профиль</a> -->
 
-                <a href="/upload"> <img src="{{ url_for('serve_avatars', filename='upload.png') }}"></a>
+                <a href="/upload"> <img src="{{ url_for('serve_avatars', filename='upload.png') }}" width="30" height="30"></a>
                 <a>•</a>
-                <a href="{{ url_for('logout') }}"> <img src="{{ url_for('serve_avatars', filename='log-out.png') }}" ></a>
+                <a href="{{ url_for('logout') }}"> <img src="{{ url_for('serve_avatars', filename='log-out.png') }}" width="30" height="30" ></a>
             {% else %}
                 <a href="/login">
-                    <img src="{{ url_for('serve_avatars', filename='question.png') }}" alt="Войти" width="30" height="30">
+                    <img src="{{ url_for('serve_avatars', filename='question.png') }}" width="30" height="30">
                 </a>
             {% endif %}
         </nav>
     </header>
 
     <div class="channel-container">
-        <h2>@{{ Markup(user.username) }}</h2>
+        <!-- <h2>@{{ Markup(user.username) }}</h2>
         {% if current_user and current_user.username == user.username %}
             <!-- <form action="/channel/{{ user.username }}/avatar" method="POST" enctype="multipart/form-data" class="upload-form">
                 <label for="avatar" class="upload-button">
@@ -40,8 +40,25 @@
 
             <!-- <a href="/upload" class="upload-button">
                 <i class="material-icons">video_call</i> Загрузить видео
-            </a> -->
-        {% endif %}
+            </a> 
+        {% endif %} -->
+
+        <div class="channel-container">
+            <h2>@{{ Markup(user.username) }}</h2>
+    
+            <!-- Подписчики и кнопка подписки -->
+            <p style="font-size: 12px;">{{ user.subscribers.count() }} подписчиков</p> 
+            {% if current_user and current_user.username != user.username %}
+                {% if user in current_user.subscribed_to %}
+                    <form action="{{ url_for('unsubscribe', user_id=user.id) }}" method="POST">
+                        <button type="submit" class="unsubscribe-button">Отписаться</button>
+                    </form>
+                {% else %}
+                    <form action="{{ url_for('subscribe', user_id=user.id) }}" method="POST">
+                        <button type="submit" class="subscribe-button">Подписаться</button>
+                    </form>
+                {% endif %}
+            {% endif %}
 
         <div class="video-container">
             {% for video in videos %}

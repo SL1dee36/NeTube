@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template, redirect, url_for, send_from_directory, session
-from models import db, User, Video, Like, Comment
+
+from models import db, User, Video, Like, Comment,DisLike
 import os
 from moviepy.editor import VideoFileClip
 import random
@@ -8,7 +9,7 @@ from markupsafe import Markup
 from werkzeug.utils import secure_filename
 import base64
 from flask import current_app as app
-from fuzzywuzzy import fuzz, process # Импортируем fuzzywuzzy
+from fuzzywuzzy import fuzz, process 
 from os import system as s
 
 s('cls')
@@ -16,10 +17,11 @@ s('cls')
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///netube.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['THUMBNAIL_FOLDER'] = 'static/thumbnails'
-app.config['AVATAR_FOLDER'] = 'static/avatars'
-app.config['VIDEOS_FOLDER'] = 'static/videos'
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 * 1024  # 16GB максимальный размер файла
+app.config['UPLOAD_FOLDER'] = os.path.join(app.root_path, 'src/static/videos')
+app.config['THUMBNAIL_FOLDER'] = os.path.join(app.root_path, 'static/thumbnails')
+app.config['AVATAR_FOLDER'] = os.path.join(app.root_path, 'static/avatars')
+app.config['VIDEOS_FOLDER'] = os.path.join(app.root_path, 'static/videos')
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 * 1024  # 16GB 
 app.secret_key = 'your_secret_key'  # Замените на ваш случайный секретный ключ
 db.init_app(app)
 
@@ -38,34 +40,32 @@ def generate_random_name(length=10):
     return ''.join(random.choice(letters) for i in range(length))
 
 def get_current_user():
-    """Возвращает текущего пользователя или None, если пользователь не вошел."""
     user_id = session.get('user_id')
     if user_id is not None:
         return User.query.get(user_id)
     return None
 
-
-
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    current_user = get_current_user()
+    current_user = get_current_user()  # Assuming you have a get_current_user() function
     videos = Video.query.order_by(Video.likes.desc()).all()
+    search_results = []
+
     if request.method == 'POST':
         search_query = request.form.get('search_query')
         if search_query:
-            app.logger.debug(f"Search query: {search_query}")  # Логируем запрос
-
-            # # Временно убираем FuzzyWuzzy
-            # videos = Video.query.filter(Video.title.ilike(f"%{search_query}%")).order_by(Video.likes.desc()).all()
-
+            app.logger.debug(f"Search query: {search_query}")
             matches = process.extract(search_query, [video.title for video in videos], scorer=fuzz.token_sort_ratio)
-            app.logger.debug(f"FuzzyWuzzy matches: {matches}")  # Логируем совпадения
-            filtered_videos = [video for video, score in matches if score >= 60]
-            return render_template('index.html', videos=filtered_videos, Markup=Markup, current_user=current_user)
-    return render_template('index.html', videos=videos, Markup=Markup, current_user=current_user)
+            app.logger.debug(f"FuzzyWuzzy matches: {matches}")
+            search_results = [video for video, score in matches if score >= 20]
+            search_results = [Video.query.filter_by(title=video.title if isinstance(video.title, str) else str(video.title)).first() for video in search_results]
+            search_results = [video for video in search_results if video is not None]
 
-
-
+    return render_template('index.html', 
+                           videos=videos, 
+                           search_results=search_results, 
+                           Markup=Markup, 
+                           current_user=current_user)
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
@@ -96,14 +96,31 @@ def video(video_name):
     video = Video.query.filter_by(url=video_name).first_or_404()
     current_user = get_current_user()
 
-    # Логика выбора рекомендуемых видео (пример):
-    related_videos = Video.query.filter(Video.id != video.id).limit(9).all()  # Выбираем 5 других видео
+    related_videos = Video.query.filter(Video.id != video.id).limit(9).all()
     
     return render_template('video.html', 
                            video=video, 
                            Markup=Markup, 
                            current_user=current_user,
                            related_videos=related_videos) 
+
+@app.route('/subscribe/<int:user_id>', methods=['POST'])
+def subscribe(user_id):
+    user = get_current_user()
+    if user:
+        user_to_subscribe = User.query.get(user_id)
+        user.subscribed_to.append(user_to_subscribe)
+        db.session.commit()
+    return redirect(url_for('channel', username=user_to_subscribe.username))
+
+@app.route('/unsubscribe/<int:user_id>', methods=['POST'])
+def unsubscribe(user_id):
+    user = get_current_user()
+    if user:
+        user_to_unsubscribe = User.query.get(user_id)
+        user.subscribed_to.remove(user_to_unsubscribe)
+        db.session.commit()
+    return redirect(url_for('channel', username=user_to_unsubscribe.username))
 
 @app.route('/static/videos/<path:filename>')
 def serve_videos(filename):
@@ -120,16 +137,55 @@ def serve_avatars(filename):
 @app.route('/like/<video_name>')
 def like_video(video_name):
     video = Video.query.filter_by(url=video_name).first_or_404()
-    video.likes += 1
-    db.session.commit()
+    user = get_current_user()
+    if user:
+        existing_like = Like.query.filter_by(user_id=user.id, video_id=video.id).first()
+        existing_dislike = DisLike.query.filter_by(user_id=user.id, video_id=video.id).first()
+
+        if existing_like:
+            # Убираем лайк
+            db.session.delete(existing_like)
+            video.likes -= 1
+        else:
+            # Ставим лайк
+            if existing_dislike:
+                # Убираем дизлайк
+                db.session.delete(existing_dislike)
+                video.dislikes -= 1
+            new_like = Like(user_id=user.id, video_id=video.id)
+            db.session.add(new_like)
+            video.likes += 1
+
+        db.session.commit()
+
     return redirect(url_for('video', video_name=video_name))
 
 @app.route('/dislike/<video_name>')
 def dislike_video(video_name):
     video = Video.query.filter_by(url=video_name).first_or_404()
-    video.likes -= 1
-    db.session.commit()
+    user = get_current_user()
+    if user:
+        existing_like = Like.query.filter_by(user_id=user.id, video_id=video.id).first()
+        existing_dislike = DisLike.query.filter_by(user_id=user.id, video_id=video.id).first()
+
+        if existing_dislike:
+            # Убираем дизлайк
+            db.session.delete(existing_dislike)
+            video.dislikes -= 1
+        else:
+            # Ставим дизлайк
+            if existing_like:
+                # Убираем лайк
+                db.session.delete(existing_like)
+                video.likes -= 1
+            new_dislike = DisLike(user_id=user.id, video_id=video.id)
+            db.session.add(new_dislike)
+            video.dislikes += 1
+
+        db.session.commit()
+
     return redirect(url_for('video', video_name=video_name))
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -188,6 +244,7 @@ def upload_avatar(username):
         user.avatar = filename
         db.session.commit()
     return redirect(url_for('channel', username=username))
+
 
 if __name__ == '__main__':
     with app.app_context():
