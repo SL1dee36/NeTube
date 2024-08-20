@@ -28,8 +28,9 @@
                 <input type="file" name="avatar">
                 <button type="submit">Загрузить аватар</button>
             </form>
+
+            <a href="/upload">Загрузить видео</a>
         {% endif %}
-        <a href="/upload">Загрузить видео</a>
 
         <div class="video-container">
             {% for video in videos %}
@@ -45,7 +46,7 @@
     </div>
 
     {% if 'logged_in' in session and user.id == session['user_id'] %}
-        <a href="{{ url_for('logout') }}" style="display: block; text-align: center; margin-top: 20px;">Выйти</a> 
+        <!-- <a href="{{ url_for('logout') }}" style="display: block; text-align: center; margin-top: 20px;">Выйти</a>  -->
     {% endif %}
 </body>
 </html>

@@ -1,4 +1,3 @@
-<!-- src/templates/index.html -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -6,18 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NeTube</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='index_page.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        a:hover, a:active {
+            text-decoration: none;
+            color: inherit;
+        }
+    </style>
 </head>
 <body>
     <header>
         <h1><a href="/">NeTube</a></h1> 
-        <a href="/login">
-            {% if current_user %}
+        
+        {% if current_user %}
+            <a href="{{ url_for('channel', username=current_user.username) }}">
                 <img src="{{ url_for('serve_avatars', filename=current_user.avatar) if current_user.avatar else url_for('serve_avatars', filename='plus.png') }}" alt="Аватар" width="30" height="30">
-            {% else %}
+            </a>
+        {% else %}
+            <a href="/login">
                 <img src="{{ url_for('serve_avatars', filename='question.png') }}" alt="Войти" width="30" height="30">
-            {% endif %}
-        </a>
+            </a>
+        {% endif %}
+        
     </header>
 
     <div class="video-container">
@@ -26,9 +38,13 @@
             <a href="{{ url_for('video', video_name=video.url) }}">
                 <img src="{{ url_for('serve_thumbnails', filename=video.url[:-4] + '.jpg') }}" alt="{{ video.title }}" width="320" height="180">
             </a>
-            <h3>{{ video.title }}</h3>
-            <p>Автор: <a href="{{ url_for('channel', username=video.author.username) }}">@{{ Markup(video.author.username) }}</a></p>
-            <p>Лайки: {{ video.likes }}</p>
+            <h3>
+                <a href="{{ url_for('channel', username=video.author.username) }}">
+                    <img src="{{ url_for('serve_avatars', filename=video.author.avatar) if video.author.avatar else url_for('serve_avatars', filename='plus.png') }}"> 
+                </a>
+                {{ video.title }}
+            </h3>
+            <p><a href="{{ url_for('channel', username=video.author.username) }}">@{{ Markup(video.author.username) }}</a> • {{ video.likes }} Likes </p>
         </div>
         {% endfor %}
     </div>

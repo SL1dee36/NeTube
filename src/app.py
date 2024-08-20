@@ -15,7 +15,6 @@ s('cls')
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///netube.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['UPLOAD_FOLDER'] = 'src/static/videos'
 app.config['THUMBNAIL_FOLDER'] = 'static/thumbnails'
 app.config['AVATAR_FOLDER'] = 'static/avatars'
 app.config['VIDEOS_FOLDER'] = 'static/videos'
@@ -60,10 +59,10 @@ def upload():
             file = request.files['file']
             if file and allowed_file(file.filename):
                 filename = generate_random_name() + ".mp4"
-                video_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                video_path = os.path.join('src/static/videos', filename)
                 app.logger.debug(f"Saving file to: {video_path}") 
                 file.save(video_path)
-                thumbnail_path = os.path.join(app.config['THUMBNAIL_FOLDER'], filename[:-4] + ".jpg")
+                thumbnail_path = os.path.join('src/static/thumbnails', filename[:-4] + ".jpg")
                 generate_thumbnail(video_path, thumbnail_path)
                 user_id = session['user_id']
                 new_video = Video(title=title, url=filename, description=description, user_id=user_id)
@@ -79,10 +78,6 @@ def video(video_name):
     video = Video.query.filter_by(url=video_name).first_or_404()
     current_user = get_current_user()
     return render_template('video.html', video=video, Markup=Markup, current_user=current_user)
-
-@app.route('/static/videos/<path:filename>')
-def serve_static(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 @app.route('/static/videos/<path:filename>')
 def serve_videos(filename):
