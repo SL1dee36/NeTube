@@ -2,3 +2,4 @@ Flask
 Flask-SQLAlchemy
 moviepy
 Pillow
+fuzzywuzzy
