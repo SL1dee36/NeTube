@@ -31,7 +31,7 @@ header .search-container {
 header .search-container input[type="text"] {
     padding: 8px;
     width: 100%; /* Занимает всю доступную ширину */
-    max-width: 100px; /* Максимальная ширина */
+    max-width: 400px; /* Максимальная ширина */
     border: 1px solid #ccc;
     border-radius: 5px 0 0 5px;
     font-size: 13px;

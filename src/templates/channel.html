@@ -15,7 +15,7 @@
             {% if current_user %}
             <form action="{{ url_for('upload_avatar', username=current_user.username) }}" method="POST" enctype="multipart/form-data" style="display: inline-block;">
                 <label for="avatar" id="avatar-button"> 
-                  <img src="{{ url_for('serve_avatars', filename=current_user.avatar) if current_user.avatar else url_for('serve_avatars', filename='plus.png') }}" width="30" height="30" style="border-radius: 50%;">
+                  <img src="{{ url_for('serve_avatars', filename=current_user.avatar) if current_user.avatar else url_for('serve_avatars', filename='plus.png') }}" width="30" height="30">
                 </label>
                 <input type="file" id="avatar" name="avatar" style="display: none;"></form>
                 <a>•</a>

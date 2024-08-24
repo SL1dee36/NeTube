@@ -1,5 +1,5 @@
 body {
-    font-family: 'Material Icons', sans-serif;
+    font-family: 'Roboto', sans-serif;
     background-color: #f9f9f9;
     margin: 0;
     padding: 0;
@@ -258,4 +258,31 @@ button[type="submit"] {
 
 button[type="submit"]:hover {
     background-color: #3367d6;
+}
+
+.loading-animation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; 
+}
+
+.loading-spinner {
+    width: 60px;
+    height: 60px;
+    border: 5px solid #ccc;
+    border-radius: 50%;
+    border-top-color: #007bff;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
