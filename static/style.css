@@ -1,0 +1,59 @@
+/* src/static/style.css */
+.video-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.video-preview {
+    width: 320px;
+    margin: 10px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.video-preview img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+.video-info {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.likes-dislikes {
+    margin-top: 10px;
+}
+
+.likes-dislikes button {
+    background-color: #ccc;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+}
+
+.channel-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.channel-container h2 {
+    margin-bottom: 10px;
+}

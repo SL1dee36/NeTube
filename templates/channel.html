@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ user.username }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='channel_page.css') }}">
+</head>
+<body>
+    <header>
+        <h1><a href="/">NeTube</a></h1> 
+        <nav> 
+            {% if current_user %}
+                <!-- <a href="{{ url_for('channel', username=current_user.username) }}">
+                    <img src="{{ url_for('serve_avatars', filename=current_user.avatar) if current_user.avatar else url_for('serve_avatars', filename='plus.png') }}" alt="Аватар" width="30" height="30">
+                </a> -->
+                <!-- <a href="{{ url_for('channel', username=current_user.username) }}">Профиль</a> -->
+
+                <a href="/upload"> <img src="{{ url_for('serve_avatars', filename='upload.png') }}" width="30" height="30"></a>
+                <a>•</a>
+                <a href="{{ url_for('logout') }}"> <img src="{{ url_for('serve_avatars', filename='log-out.png') }}" width="30" height="30" ></a>
+            {% else %}
+                <a href="/login">
+                    <img src="{{ url_for('serve_avatars', filename='question.png') }}" width="30" height="30">
+                </a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <div class="channel-container">
+        <!-- <h2>@{{ Markup(user.username) }}</h2>
+        {% if current_user and current_user.username == user.username %}
+            <!-- <form action="/channel/{{ user.username }}/avatar" method="POST" enctype="multipart/form-data" class="upload-form">
+                <label for="avatar" class="upload-button">
+                    <i class="material-icons">add_a_photo</i> Загрузить аватар
+                </label>
+                <input type="file" name="avatar" id="avatar" style="display:none;">
+                <button type="submit" class="submit-button">Подтвердить</button>
+            </form> -->
+
+            <!-- <a href="/upload" class="upload-button">
+                <i class="material-icons">video_call</i> Загрузить видео
+            </a> 
+        {% endif %} -->
+
+        <div class="channel-container">
+            <h2>@{{ Markup(user.username) }}</h2>
+    
+            <!-- Подписчики и кнопка подписки -->
+            <p style="font-size: 12px;">{{ user.subscribers.count() }} подписчиков</p> 
+            {% if current_user and current_user.username != user.username %}
+                {% if user in current_user.subscribed_to %}
+                    <form action="{{ url_for('unsubscribe', user_id=user.id) }}" method="POST">
+                        <button type="submit" class="unsubscribe-button">Отписаться</button>
+                    </form>
+                {% else %}
+                    <form action="{{ url_for('subscribe', user_id=user.id) }}" method="POST">
+                        <button type="submit" class="subscribe-button">Подписаться</button>
+                    </form>
+                {% endif %}
+            {% endif %}
+
+        <div class="video-container">
+            {% for video in videos %}
+            <div class="video-preview">
+                <a href="{{ url_for('video', video_name=video.url) }}">
+                    <img src="{{ url_for('serve_thumbnails', filename=video.url[:-4] + '.jpg') }}" alt="{{ video.title }}" width="320" height="180">
+                </a>
+                <h3>
+                    <a href="{{ url_for('channel', username=video.author.username) }}">
+                        <img src="{{ url_for('serve_avatars', filename=video.author.avatar) if video.author.avatar else url_for('serve_avatars', filename='plus.png') }}"> 
+                    </a>
+                    {{ video.title }}
+                </h3>
+                <p><a href="{{ url_for('channel', username=video.author.username) }}">@{{ Markup(video.author.username) }}</a> • {{ video.likes }} Likes </p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- {% if 'logged_in' in session and user.id == session['user_id'] %}
+        <a href="{{ url_for('logout') }}" style="display: block; text-align: center; margin-top: 20px;">Выйти</a>  
+    {% endif %} -->
+</body>
+</html>

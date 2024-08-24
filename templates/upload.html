@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='upload_page.css') }}">
+    <title>Загрузить видео</title>
+</head>
+<body>
+    <header>
+        <h1><a href="/">NeTube</a></h1> 
+        <nav> 
+            {% if current_user %}
+                <!-- <a href="{{ url_for('channel', username=current_user.username) }}">
+                    <img src="{{ url_for('serve_avatars', filename=current_user.avatar) if current_user.avatar else url_for('serve_avatars', filename='plus.png') }}" alt="Аватар" width="30" height="30">
+                </a> -->
+                <!-- <a href="{{ url_for('channel', username=current_user.username) }}">Профиль</a> -->
+
+                <a href="/upload"> <img src="{{ url_for('serve_avatars', filename='upload.png') }}" width="30" height="30"></a>
+                <a>•</a>
+                <a href="{{ url_for('logout') }}"> <img src="{{ url_for('serve_avatars', filename='log-out.png') }}" width="30" height="30" ></a>
+            {% else %}
+                <a href="/login">
+                    <img src="{{ url_for('serve_avatars', filename='question.png') }}" width="30" height="30">
+                </a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <main>
+      <form action="/upload" method="post" enctype="multipart/form-data" >
+        <h1>Загрузить видео</h1>
+    
+        <label for="title">Название видео:</label>
+        <input type="text" id="title" name="title" placeholder="Введите название видео">
+    
+        <label for="description">Описание:</label>
+        <textarea id="description" name="description" placeholder="Добавьте описание видео"></textarea>
+    
+        <input type="file" name="file">
+    
+        <button type="submit">Загрузить</button>
+      </form>
+    </main>
+</body>
+</html>
