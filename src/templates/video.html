@@ -35,11 +35,11 @@
                     </a>
                     <div class="likes-dislikes">
                         <a href="{{ url_for('like_video', video_name=video.url) }}">
-                            <button class="like-button"><img src="{{ url_for('serve_avatars', filename='like.png') }}" width="15" height="15"> {{ video.likes }}</button>
+                            <button class="like-button"><img src="{{ url_for('serve_icons', filename='like.png') }}" width="15" height="15"> {{ video.likes }}</button>
                         </a>
                         <a>⁄</a>
                         <a href="{{ url_for('dislike_video', video_name=video.url) }}">
-                            <button class="dislike-button"><img src="{{ url_for('serve_avatars', filename='dislike.png') }}" width="15" height="15"> {{ video.dislikes }}</button>
+                            <button class="dislike-button"><img src="{{ url_for('serve_icons', filename='dislike.png') }}" width="15" height="15"> {{ video.dislikes }}</button>
                         </a>
                     </div>
                 </div>

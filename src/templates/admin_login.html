@@ -1,0 +1,19 @@
+<!-- src/templates/admin_login.html -->
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Вход в панель администрирования</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    </head>
+<body>
+    <h1>Вход в панель администрирования</h1>
+    <form method="post">
+        <label for="admin_key">Секретный ключ:</label>
+        <input type="password" id="admin_key" name="admin_key" required>
+        <button type="submit">Войти</button>
+    </form>
+</body>
+</html>

@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='upload_page.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <title>Загрузить видео</title>
 </head>
 <body>
@@ -18,9 +18,9 @@
                 </a> -->
                 <!-- <a href="{{ url_for('channel', username=current_user.username) }}">Профиль</a> -->
 
-                <a href="/upload"> <img src="{{ url_for('serve_avatars', filename='upload.png') }}" width="30" height="30"></a>
+                <a href="/upload"> <img src="{{ url_for('serve_icons', filename='upload.png') }}" width="30" height="30"></a>
                 <a>•</a>
-                <a href="{{ url_for('logout') }}"> <img src="{{ url_for('serve_avatars', filename='log-out.png') }}" width="30" height="30" ></a>
+                <a href="{{ url_for('logout') }}"> <img src="{{ url_for('serve_icons', filename='log-out.png') }}" width="30" height="30" ></a>
             {% else %}
                 <a href="/login">
                     <img src="{{ url_for('serve_avatars', filename='question.png') }}" width="30" height="30">

@@ -103,6 +103,8 @@ header nav a img {
     flex-wrap: wrap;
     justify-content: center;
     padding: 20px;
+    color: inherit;
+    text-decoration: none;
 }
 
 .video-preview {
@@ -113,6 +115,8 @@ header nav a img {
     background-color: #ffffff00;
     transition: transform 0.3s, box-shadow 0.3s;
     padding: 5px;
+    color: inherit;
+    text-decoration: none;
 }
 
 header a:link, header a:visited {
@@ -129,6 +133,8 @@ header a:hover, header a:active {
     transform: scale(1.0);
     background-color: #fff;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    color: inherit;
+    text-decoration: none;
 }
 
 .video-preview img {
@@ -141,6 +147,8 @@ header a:hover, header a:active {
 
 .video-preview:hover img {
     transform: scale(1.01);
+    color: inherit;
+    text-decoration: none;
 }
 
 .video-preview h3 {
@@ -163,6 +171,29 @@ header a:hover, header a:active {
     margin: 0;
     font-size: 14px;
     color: #666;
+}
+
+header a:link, header a:visited {
+    color: inherit;
+    text-decoration: none;
+}
+
+header a:hover, header a:active {
+    color: inherit;
+    text-decoration: none;
+}
+
+#avatar-button {
+    border-radius: 50%; /* Скругление в форме круга */
+    border: none; /* Убираем границу */
+    padding: 0; /* Убираем внутренние отступы */
+    background: none; /* Убираем фоновый цвет */
+    cursor: pointer; /* Изменяем курсор на указатель */
+}
+
+#avatar-button:hover {
+    /* Добавьте стили при наведении курсора, например, изменение цвета */
+    transform: scale(1.01);
 }
 
 .subscribe-button {
@@ -189,4 +220,17 @@ header a:hover, header a:active {
     font-size: 12px;
     border-radius: 5px; /* Скругленные углы */
     cursor: pointer;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+a:hover, a:active {
+    text-decoration: none;
+    color: inherit;
+}
+
+img {
+    border-radius: 50%
 }

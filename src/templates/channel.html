@@ -5,60 +5,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ user.username }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='channel_page.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
+
         <h1><a href="/">NeTube</a></h1> 
         <nav> 
             {% if current_user %}
-                <!-- <a href="{{ url_for('channel', username=current_user.username) }}">
-                    <img src="{{ url_for('serve_avatars', filename=current_user.avatar) if current_user.avatar else url_for('serve_avatars', filename='plus.png') }}" alt="Аватар" width="30" height="30">
-                </a> -->
-                <!-- <a href="{{ url_for('channel', username=current_user.username) }}">Профиль</a> -->
-
-                <a href="/upload"> <img src="{{ url_for('serve_avatars', filename='upload.png') }}" width="30" height="30"></a>
+            <form action="{{ url_for('upload_avatar', username=current_user.username) }}" method="POST" enctype="multipart/form-data" style="display: inline-block;">
+                <label for="avatar" id="avatar-button"> 
+                  <img src="{{ url_for('serve_avatars', filename=current_user.avatar) if current_user.avatar else url_for('serve_avatars', filename='plus.png') }}" width="30" height="30" style="border-radius: 50%;">
+                </label>
+                <input type="file" id="avatar" name="avatar" style="display: none;"></form>
                 <a>•</a>
-                <a href="{{ url_for('logout') }}"> <img src="{{ url_for('serve_avatars', filename='log-out.png') }}" width="30" height="30" ></a>
+                <a href="/upload"> <img src="{{ url_for('serve_icons', filename='upload.png') }}" width="30" height="30"></a>
+                <a>•</a>
+                <a href="{{ url_for('logout') }}"> <img src="{{ url_for('serve_icons', filename='log-out.png') }}" width="30" height="30" ></a>
+            
             {% else %}
                 <a href="/login">
                     <img src="{{ url_for('serve_avatars', filename='question.png') }}" width="30" height="30">
                 </a>
             {% endif %}
         </nav>
+
+        <script>
+            document.getElementById('avatar').addEventListener('change', function() {
+                console.log("Файл выбран:", this.files[0].name);
+                handleAvatarChange(); // Вызываем функцию, чтобы отправить форму
+            });
+
+            function handleAvatarChange() {
+                const fileInput = document.getElementById('avatar');
+                const form = fileInput.closest('form'); 
+                if (fileInput.files && fileInput.files[0]) {
+                    form.submit();
+                }
+            }
+        </script>
+
     </header>
 
     <div class="channel-container">
-        <!-- <h2>@{{ Markup(user.username) }}</h2>
-        {% if current_user and current_user.username == user.username %}
-            <!-- <form action="/channel/{{ user.username }}/avatar" method="POST" enctype="multipart/form-data" class="upload-form">
-                <label for="avatar" class="upload-button">
-                    <i class="material-icons">add_a_photo</i> Загрузить аватар
-                </label>
-                <input type="file" name="avatar" id="avatar" style="display:none;">
-                <button type="submit" class="submit-button">Подтвердить</button>
-            </form> -->
-
-            <!-- <a href="/upload" class="upload-button">
-                <i class="material-icons">video_call</i> Загрузить видео
-            </a> 
-        {% endif %} -->
-
-        <div class="channel-container">
-            <h2>@{{ Markup(user.username) }}</h2>
-    
-            <!-- Подписчики и кнопка подписки -->
-            <p style="font-size: 12px;">{{ user.subscribers.count() }} подписчиков</p> 
-            {% if current_user and current_user.username != user.username %}
-                {% if user in current_user.subscribed_to %}
-                    <form action="{{ url_for('unsubscribe', user_id=user.id) }}" method="POST">
-                        <button type="submit" class="unsubscribe-button">Отписаться</button>
-                    </form>
-                {% else %}
-                    <form action="{{ url_for('subscribe', user_id=user.id) }}" method="POST">
-                        <button type="submit" class="subscribe-button">Подписаться</button>
-                    </form>
-                {% endif %}
+        <h2>@{{ Markup(user.username) }}</h2>
+        
+        <p style="font-size: 12px;">{{ user.subscribers.count() }} подписчиков</p> 
+        {% if current_user and current_user.username != user.username %}
+            {% if user in current_user.subscribed_to %}
+                <form action="{{ url_for('unsubscribe', user_id=user.id) }}" method="POST">
+                    <button type="submit" class="unsubscribe-button">Отписаться</button>
+                </form>
+            {% else %}
+                <form action="{{ url_for('subscribe', user_id=user.id) }}" method="POST">
+                    <button type="submit" class="subscribe-button">Подписаться</button>
+                </form>
             {% endif %}
+        {% endif %}
 
         <div class="video-container">
             {% for video in videos %}
@@ -68,11 +71,11 @@
                 </a>
                 <h3>
                     <a href="{{ url_for('channel', username=video.author.username) }}">
-                        <img src="{{ url_for('serve_avatars', filename=video.author.avatar) if video.author.avatar else url_for('serve_avatars', filename='plus.png') }}"> 
+                        <img src="{{ url_for('serve_avatars', filename=video.author.avatar) if video.author.avatar else url_for('static', filename='plus.png') }}"> 
                     </a>
                     {{ video.title }}
                 </h3>
-                <p><a href="{{ url_for('channel', username=video.author.username) }}">@{{ Markup(video.author.username) }}</a> • {{ video.likes }} Likes </p>
+                <p><a href="{{ url_for('channel', username=video.author.username) }}" style="color: inherit; text-decoration: none;">@{{ Markup(video.author.username) }}</a> • {{ video.likes }} Likes </p>
             </div>
             {% endfor %}
         </div>
