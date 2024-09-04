@@ -1,472 +1,101 @@
 /* src/static/styles.css */
 
-/* Общие стили */
-body {
+.body {
     font-family: 'Material Icons', sans-serif;
-    background-color: #f9f9f9;
-    margin: 0;
-    padding: 0;
 }
 
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-header h1 {
-    margin: 0;
-    font-size: 24px;
-    color: #333;
-}
-
-header a {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    color: inherit;
-}
-
-header a:link, header a:visited {
-    color: inherit;
-    text-decoration: none;
-}
-
-header a:hover, header a:active {
-    color: inherit;
-    text-decoration: none;
-}
-
-header img {
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-}
-
-/* Стили для поиска */
-header .search-container {
-    display: flex;
-    align-items: center;
-    vertical-align: center;
-    margin: 0 auto; /* Центрируем контейнер */
-}
-
-header .search-container input[type="text"] {
-    padding: 8px;
-    width: 200px;
-    vertical-align: center;
-    border: 1px solid #ccc;
-    border-radius: 5px 0 0 5px;
-    font-size: 13px;
-}
-
-header .search-container button {
-    background-color: #ffffff;
-    border: 1px solid #ccc;
-    vertical-align: center;
-    border-radius: 0 5px 5px 0;
-    padding: 8px 12px;
-    cursor: pointer;
-}
-
-/* Стили для каналов */
-.channel-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 20px;
-}
-
-.channel-container h2 {
-    margin-bottom: 10px;
-    font-size: 22px;
-    color: #333;
-}
-
-/* Стили для загрузки видео */
-.upload-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.upload-button, .submit-button {
-    display: inline-flex;
-    align-items: center;
-    padding: 10px 20px;
-    margin: 10px 0;
-    font-size: 16px;
-    font-weight: bold;
-    color: #fff;
-    background-color: #4CAF50; /* Зеленый цвет */
-    border: none;
-    border-radius: 4px; /* Более скругленные углы */
-    cursor: pointer;
-    text-align: center;
-    text-decoration: none;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Добавляем transition для box-shadow */
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Тень */
-}
-
-.upload-button:hover, .submit-button:hover {
-    background-color: #45a049; /* Более темный зеленый при наведении */
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Увеличиваем тень при наведении */
-}
-
-.upload-button i, .submit-button i {
-    margin-right: 5px;
-    font-size: 18px;
-}
-
-/* Стили для видео */
-.video-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding: 20px;
-}
-
-.video-preview {
-    width: 320px;
-    margin: 15px;
-    border-radius: 10px;
-    overflow: hidden;
-    background-color: #ffffff00;
-    transition: transform 0.3s, box-shadow 0.3s;
-    padding: 5px;
-}
-
-.video-preview:hover {
-    transform: scale(1.0);
-    background-color: #fff;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-}
-
-.video-preview img {
+#menu-overlay {
+    position: fixed; 
+    top: 0;
+    left: 0;
     width: 100%;
-    height: auto;
-    object-fit: cover;
-    border-radius: 10px;
-    transition: transform 0.3s;
-}
-
-.video-preview:hover img {
-    transform: scale(1.01);
-}
-
-.video-preview h3 {
-    margin: 10px 0 5px;
-    font-size: 16px;
-    color: #333;
-    display: flex;
-    align-items: center;
-}
-
-.video-preview h3 img {
-    width: 30px;
-    height: 30px;
-    object-fit: cover;
-    border-radius: 50%;
-    margin-right: 10px;
-}
-
-.video-preview p {
-    margin: 0;
-    font-size: 14px;
-    color: #666;
-}
-
-/* Стили для аватарки */
-#avatar-button {
-    border-radius: 50%; /* Скругление в форме круга */
-    border: none; /* Убираем границу */
-    padding: 0; /* Убираем внутренние отступы */
-    background: none; /* Убираем фоновый цвет */
-    cursor: pointer; /* Изменяем курсор на указатель */
-}
-
-#avatar-button:hover {
-    /* Добавьте стили при наведении курсора, например, изменение цвета */
-    transform: scale(1.01);
-}
-
-/* Стили для кнопок */
-.subscribe-button {
-    background-color: #ff0000; /* Синий цвет */
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 12px;
-    border-radius: 5px; /* Скругленные углы */
-    cursor: pointer;
-}
-
-.unsubscribe-button {
-    background-color: #3e3e3e; /* Красный цвет */
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 12px;
-    border-radius: 5px; /* Скругленные углы */
-    cursor: pointer;
-}
-
-/* Стили для формы */
-h1 {
-    color: #333;
-}
-
-main {
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0); /* Начальное состояние: прозрачный фон */
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: calc(100vh - 250px); /* Высота окна браузера минус высота header */
-    padding-top: 10px; /* Отступ сверху */
+    z-index: 1000; 
+    opacity: 0; /* Начальное состояние: невидимый */
+    pointer-events: none; /* Начальное состояние: не реагирует на клики */
+    transition: opacity 0.15s ease-in-out; /* Плавное изменение прозрачности */
 }
 
-form {
-    width: 100%;
-    max-width: 500px;
-    padding: 30px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+#menu-overlay.open {
+    opacity: 1; /* Открытое состояние: видимый */
+    pointer-events: auto; /* Открытое состояние: реагирует на клики */
+    background-color: rgba(0, 0, 0, 0.5); /* Открытое состояние: полупрозрачный фон */
 }
 
-input[type="text"],
-textarea {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-sizing: border-box;
-}
-
-input[type="file"] {
-    margin-bottom: 15px;
-}
-
-button[type="submit"] {
-    padding: 12px 20px;
-    background-color: #448aff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-button[type="submit"]:hover {
-    background-color: #3367d6;
-}
-
-/* Стили для страниц авторизации и регистрации */
-.auth-page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-}
-
-.auth-form {
-    display: flex;
-    flex-direction: column;
-    width: 300px;
+#menu-content {
+    background-color: white;
     padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #fff;
-}
-
-.auth-form input[type="text"],
-.auth-form input[type="password"] {
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-}
-
-.auth-form button[type="submit"] {
-    padding: 10px;
-    border: none;
-    border-radius: 3px;
-    background-color: #4CAF50;
-    color: white;
-    cursor: pointer;
-}
-
-
-/*  Стили для видео страницы */
-.main-container {
+    border-radius: 10px; /* Скругленные углы */
+    width: 400px;
+    height: 400px;
     display: flex;
-    padding: 20px;
+    flex-direction: column; /* Располагаем блоки вертикально */
 }
 
-.video-section {
-    flex: 2;
-    margin-right: 20px;
-    margin-left: 10px; /* Отступ справа от левого края экрана */
-    margin-top: 10px; /* Отступ снизу от шапки */
+#menu-content > * { /* Выбираем все прямые дочерние элементы #menu-content */
+    margin-bottom: 15px; /* Отступ между блоками */
+    /* border-bottom: 1px solid #ccc; Разделительная линия */
+    /* padding-bottom: 15px; Отступ снизу от линии */
 }
 
-.video-info {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 640px;
+#menu-content > *:last-child { /* Убираем линию у последнего блока */
+    border-bottom: none;
+    margin-bottom: 0;
 }
 
-.video-info video {
-    width: 100%;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.menu-block { 
+    /* padding: 10px;  */
+    box-sizing: border-box; /* Добавляем эту строку */
 }
 
-.video-info h2 {
-    margin: 20px 0 10px;
-    font-size: 24px;
-    color: #333;
+.separator { 
+    width: auto; /* Например, 90% от ширины #menu-content */
+    border-bottom: 1px solid #ccc; 
 }
 
-.author-info {
+.vert-separator {
+    height: 30px; /* Высота сепаратора */
+    width: 1px; /* Толщина линии */
+    background-color: #ccc; /* Цвет линии */
+    margin: 15px auto; /* Отступы сверху/снизу, центрирование по горизонтали */
+}
+
+.hidden {
+    display: none;
+}
+
+
+.user-info {
+    display: flex; /* Располагаем аватарку и детали пользователя в строку */
+    align-items: center; /* Вертикальное выравнивание */
+}
+
+.user-details {
+    margin-left: 10px;
     display: flex;
-    align-items: center;
-    margin-bottom: 10px;
+    flex-direction: column; /* Располагаем тег и подписчиков вертикально */
 }
 
-.author-info img {
-    border-radius: 50%;
-    margin-right: 10px;
+.username {
+    font-size: 18px; /* Уменьшаем размер шрифта для подписчиков */
+    margin-bottom: 5px;
+    font-weight: 500; /* Выделяем имя пользователя */
 }
 
-.author-info span {
-    font-size: 16px;
-    color: #333;
-    margin-right: 20px;
-    align-self: center; /* Центрирование тега автора по вертикали */
-}
-
-.likes-dislikes {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.likes-dislikes button {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    font-size: 16px;
-    color: #333;
-}
-
-.likes-dislikes button img {
-    margin-right: 5px;
-}
-
-.description {
-    color: #666;
-    font-size: 16px;
-    max-height: 60px;
-    overflow: hidden;
-    transition: max-height 0.3s;
-}
-
-.description.expanded {
-    max-height: none;
-}
-
-.show-more {
-    background-color: #007BFF;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    margin-top: 10px;
-}
-
-.show-more:hover {
-    background-color: #0056b3;
-}
-
-.related-videos {
-    flex: 1.3;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.related-videos h3 {
-    font-size: 20px;
-    color: #333;
-    margin-bottom: 10px;
-}
-
-.related-videos ul {
-    list-style: none;
-    padding: 0;
-}
-
-.related-videos ul li {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 10px;
-    color: inherit;
-}
-
-.related-videos ul li * {
-    margin-top: 0;
-    vertical-align: top;
-    color: inherit;
-}
-
-.related-videos ul li div {
-    display: flex;
-    flex-direction: column;
-}
-
-.related-videos ul li img {
-    width: 120px;
-    height: 70px;
-    border-radius: 5px;
-    margin-right: 10px;
-}
-
-.related-videos ul li a {
-    font-size: 16px;
-    color: inherit;
-    text-decoration: none;
-}
-
-.related-videos ul li a:hover {
-    text-decoration: underline;
-    color: inherit;
+.subscribers {
+    font-size: 15px; /* Уменьшаем размер шрифта для подписчиков */
+    color: #666; /* Делаем текст подписчиков менее заметным */
 }
 
 a {
-    text-decoration: none; /* Убираем подчеркивания у всех ссылок */
-    color: inherit;
+    display: flex;
+    align-items: center; 
 }
 
-a:link, a:visited, a:hover, a:active {
-    color: inherit;
-    text-decoration: none;
+.a img {
+    border-radius: 0%;
 }

@@ -22,7 +22,7 @@ app.config['THUMBNAIL_FOLDER'] = os.path.join(app.root_path, 'static/thumbnails'
 app.config['ICONS_FOLDER'] = os.path.join(app.root_path, 'static/avatars')
 app.config['AVATARS_FOLDER'] = os.path.join(app.root_path, 'static/avatars/users')
 app.config['VIDEOS_FOLDER'] = os.path.join(app.root_path, 'static/videos')
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 * 1024  # 16GB
+app.config['MAX_CONTENT_LENGTH'] = 8 * 1024 * 1024 * 1024  # 8GB
 app.secret_key = 'your_secret_key'  # Замените на ваш случайный секретный ключ
 admin_secret_key = "123"  # Секретный ключ для админ-панели
 db.init_app(app)
@@ -76,6 +76,13 @@ def index():
                            Markup=Markup,
                            current_user=current_user)
 
+@app.route('/base', methods=['GET', 'POST'])
+def base():
+    current_user = get_current_user()
+
+    return render_template('base.html',
+                           Markup=Markup,
+                           current_user=current_user)
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
