@@ -2,7 +2,7 @@
 
 **NeTube** - это упрощенная платформа для обмена видео, созданная с использованием фреймворка Flask (Python). Она позволяет пользователям загружать, просматривать и оценивать видеоролики.
 
-https://youtu.be/WQ1PMYux2bQ
+[Демонстрация WebПриложения](https://www.youtube.com/playlist?list=PLcoXBVsrfn2R5gXnWqDEzejpQUuILAbuW)
 
 **Основные функции:**
 
