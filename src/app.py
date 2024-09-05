@@ -3,6 +3,7 @@ from flask import Flask, request, render_template, redirect, url_for, send_from_
 from models import db, User, Video, Like, Comment, DisLike
 import os
 from moviepy.editor import VideoFileClip
+from PIL import Image
 import random
 import string
 from markupsafe import Markup
@@ -34,10 +35,56 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
-
 def generate_thumbnail(video_path, thumbnail_path):
+    """
+    Генерирует миниатюру видео, сохраняя ее в нужном размере и соотношении сторон.
+
+    Args:
+        video_path (str): Путь к видеофайлу.
+        thumbnail_path (str): Путь для сохранения миниатюры.
+    """
     video = VideoFileClip(video_path)
-    video.save_frame(thumbnail_path, t=0.0)
+
+    frame = video.get_frame(t=0.0)
+    image = Image.fromarray(frame)
+
+    width, height = image.size
+
+    # Обрезка для сохранения соотношения 16:9
+    if width / height != 16 / 9:
+        # Вычисляем целевую ширину, чтобы получить соотношение 16:9
+        if width > height:
+            crop_width = width
+            crop_height = int(crop_width * 9 / 16)
+        else:
+            crop_height = height
+            crop_width = int(crop_height * 16 / 9)
+
+        # Вычисляем разницу в ширине и высоте
+        width_diff = width - crop_width
+        height_diff = height - crop_height
+
+        # Вычисляем смещения для обрезки
+        left_offset = width_diff // 2
+        top_offset = height_diff // 2
+
+        # Обрезка изображения
+        left = left_offset
+        right = left + crop_width
+        top = top_offset
+        bottom = top + crop_height
+
+        image = image.crop((left, top, right, bottom))
+    
+    # Сжатие, если необходимо
+    if width > 1280 or height > 720:
+        new_width = 1280
+        new_height = int(new_width * 9 / 16)
+
+        image = image.resize((new_width, new_height), Image.LANCZOS)  # Используем LANCZOS для лучшего качества сжатия
+
+    # Сохранение миниатюры
+    image.save(thumbnail_path)
 
 
 def generate_random_name(length=10):
@@ -90,7 +137,7 @@ def upload():
     if 'logged_in' in session:
         if request.method == 'POST':
             title = request.form['title']
-            description = request.form['description']
+            description = request.form['description'][:500]  # Обрезаем описание до 500 символов
             file = request.files['file']
             if file and allowed_file(file.filename):
                 filename = generate_random_name() + ".mp4"
@@ -107,7 +154,6 @@ def upload():
         return render_template('upload.html', current_user=current_user)
     else:
         return redirect(url_for('login'))
-
 
 @app.route('/video/<video_name>')
 def video(video_name):

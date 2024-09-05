@@ -3,21 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ user.username }}</title>
+    <title>{{ user.username }} Channel</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='channel_page.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
 
         <h1><a href="/">NeTube</a></h1> 
-        <nav> 
+        <nav>
             {% if current_user %}
             <form action="{{ url_for('upload_avatar', username=current_user.username) }}" method="POST" enctype="multipart/form-data" style="display: inline-block;">
-                <label for="avatar" id="avatar-button"> 
-                  <img src="{{ url_for('serve_avatars', filename=current_user.avatar) if current_user.avatar else url_for('serve_avatars', filename='plus.png') }}" width="30" height="30">
+                <label for="mini-avatar" id="menu-button"> 
+                  <img src="{{ url_for('serve_avatars', filename=current_user.avatar) if current_user.avatar else url_for('serve_avatars', filename='plus.png') }}" width="30" height="30" style="border-radius: 50%;object-fit: cover;">
                 </label>
-                <input type="file" id="avatar" name="avatar" style="display: none;"></form>
+                <button id="menu-button" style="display: none;"></button></form>
                 <a>•</a>
                 <a href="/upload"> <img src="{{ url_for('serve_icons', filename='upload.png') }}" width="30" height="30"></a>
                 <a>•</a>
@@ -28,24 +30,54 @@
                     <img src="{{ url_for('serve_avatars', filename='question.png') }}" width="30" height="30">
                 </a>
             {% endif %}
+
         </nav>
-
-        <script>
-            document.getElementById('avatar').addEventListener('change', function() {
-                console.log("Файл выбран:", this.files[0].name);
-                handleAvatarChange(); // Вызываем функцию, чтобы отправить форму
-            });
-
-            function handleAvatarChange() {
-                const fileInput = document.getElementById('avatar');
-                const form = fileInput.closest('form'); 
-                if (fileInput.files && fileInput.files[0]) {
-                    form.submit();
-                }
-            }
-        </script>
-
     </header>
+
+    <div id="menu-overlay"> 
+        <div id="menu-content">
+            <div class="menu-block">
+                <div class="user-info">
+                    {% if current_user %}
+                    <form action="{{ url_for('upload_avatar', username=current_user.username) }}" method="POST" enctype="multipart/form-data" style="display: inline-block;">
+                        <label for="avatar" id="avatar-button"> 
+                          <img src="{{ url_for('serve_avatars', filename=current_user.avatar) if current_user.avatar else url_for('serve_avatars', filename='plus.png') }}" width="60" height="60" style="border-radius: 50%;object-fit: cover;">
+                        </label>
+                        <input type="file" id="avatar" name="avatar" style="display: none;"></form>
+                            <div class="user-details">
+                                <span class="username" >@{{ Markup(current_user.username) }}</span>
+                                <span class="subscribers" >{{ current_user.subscribers.count() }} подписчиков</span>
+                            </div> 
+                            <div class="vert-separator"></div>
+                            <a href="{{ url_for('channel', username=current_user.username) }}" style="color: rgb(0, 110, 255);">Перейти на канал</a>
+                        </p>
+
+                    {% else %}
+                        <a href="/login">
+                            <img src="{{ url_for('serve_avatars', filename='question.png') }}" width="60" height="60">
+                        </a>
+                    {% endif %}
+                </div>
+
+            </div>
+            <div class="separator"></div> 
+            <div class="menu-block">
+
+                <a> <img style="margin-right: 15px;" src="{{ url_for('serve_icons', filename='changeuser.png') }}" width="30" height="30">Ваши данные на NeTube</a>
+                <a href="{{ url_for('login') }} "> <img style="margin-right: 15px;" src="{{ url_for('serve_icons', filename='switchacc.png') }}" width="30" height="30">Сменить аккаунт</a>                 
+                <a href="{{ url_for('logout') }}"> <img style="margin-right: 15px;" src="{{ url_for('serve_icons', filename='log-out.png') }}" width="30" height="30" >Выйти</a>
+
+            </div>
+            <div class="separator"></div> 
+            <div class="menu-block">
+
+                <p>Тема: Светлая</p>
+                <p>Язык: Русский</p>
+                <p>Настройки</p>
+            
+            </div>
+        </div>
+    </div>
 
     <div class="channel-container">
         <h2>@{{ Markup(user.username) }}</h2>
@@ -85,4 +117,33 @@
         <a href="{{ url_for('logout') }}" style="display: block; text-align: center; margin-top: 20px;">Выйти</a>  
     {% endif %} -->
 </body>
+
+<script>
+    const menuButton = document.getElementById('menu-button');
+    const menuOverlay = document.getElementById('menu-overlay');
+
+    menuButton.addEventListener('click', () => {
+        menuOverlay.classList.toggle('open');
+    });
+
+    menuOverlay.addEventListener('click', (event) => {
+        if (event.target === menuOverlay) {
+            menuOverlay.classList.remove('open');
+        }
+    });
+
+    document.getElementById('avatar').addEventListener('change', function() {
+        console.log("Файл выбран:", this.files[0].name);
+        handleAvatarChange(); // Вызываем функцию, чтобы отправить форму
+    });
+
+    function handleAvatarChange() {
+        const fileInput = document.getElementById('avatar');
+        const form = fileInput.closest('form'); 
+        if (fileInput.files && fileInput.files[0]) {
+            form.submit();
+        }
+    }
+</script>
+
 </html>

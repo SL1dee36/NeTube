@@ -6,19 +6,78 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ video.title }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='video_page.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='channel_page.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
         <h1><a href="/">NeTube</a></h1> 
-        <a href="/login">
+        <nav>
             {% if current_user %}
-                <img src="{{ url_for('serve_avatars', filename=current_user.avatar) if current_user.avatar else url_for('serve_avatars', filename='plus.png') }}" alt="Аватар" width="30" height="30">
+            <form action="{{ url_for('upload_avatar', username=current_user.username) }}" method="POST" enctype="multipart/form-data" style="display: inline-block;">
+                <label for="mini-avatar" id="menu-button"> 
+                  <img src="{{ url_for('serve_avatars', filename=current_user.avatar) if current_user.avatar else url_for('serve_avatars', filename='plus.png') }}" width="30" height="30" style="border-radius: 50%;object-fit: cover;">
+                </label>
+                <button id="menu-button" style="display: none;"></button></form>
+                <a>•</a>
+                <a href="/upload"> <img src="{{ url_for('serve_icons', filename='upload.png') }}" width="30" height="30"></a>
+                <a>•</a>
+                <a href="{{ url_for('logout') }}"> <img src="{{ url_for('serve_icons', filename='log-out.png') }}" width="30" height="30" ></a>
+            
             {% else %}
-                <img src="{{ url_for('serve_avatars', filename='question.png') }}" alt="Войти" width="30" height="30">
+                <a href="/login">
+                    <img src="{{ url_for('serve_avatars', filename='question.png') }}" width="30" height="30">
+                </a>
             {% endif %}
-        </a>
+
+        </nav>
     </header>
+
+    <div id="menu-overlay"> 
+        <div id="menu-content">
+            <div class="menu-block">
+                <div class="user-info">
+                    {% if current_user %}
+                    <form action="{{ url_for('upload_avatar', username=current_user.username) }}" method="POST" enctype="multipart/form-data" style="display: inline-block;">
+                        <label for="avatar" id="avatar-button"> 
+                          <img src="{{ url_for('serve_avatars', filename=current_user.avatar) if current_user.avatar else url_for('serve_avatars', filename='plus.png') }}" width="60" height="60" style="border-radius: 50%;object-fit: cover;">
+                        </label>
+                        <input type="file" id="avatar" name="avatar" style="display: none;"></form>
+                            <div class="user-details">
+                                <span class="username" >@{{ Markup(current_user.username) }}</span>
+                                <span class="subscribers" >{{ current_user.subscribers.count() }} подписчиков</span>
+                            </div> 
+                            <div class="vert-separator"></div>
+                            <a href="{{ url_for('channel', username=current_user.username) }}" style="color: rgb(0, 110, 255);">Перейти на канал</a>
+                        </p>
+
+                    {% else %}
+                        <a href="/login">
+                            <img src="{{ url_for('serve_avatars', filename='question.png') }}" width="60" height="60">
+                        </a>
+                    {% endif %}
+                </div>
+
+            </div>
+            <div class="separator"></div> 
+            <div class="menu-block">
+
+                <a> <img style="margin-right: 15px;" src="{{ url_for('serve_icons', filename='changeuser.png') }}" width="30" height="30">Ваши данные на NeTube</a>
+                <a href="{{ url_for('login') }} "> <img style="margin-right: 15px;" src="{{ url_for('serve_icons', filename='switchacc.png') }}" width="30" height="30">Сменить аккаунт</a>                 
+                <a href="{{ url_for('logout') }}"> <img style="margin-right: 15px;" src="{{ url_for('serve_icons', filename='log-out.png') }}" width="30" height="30" >Выйти</a>
+
+            </div>
+            <div class="separator"></div> 
+            <div class="menu-block">
+
+                <p>Тема: Светлая</p>
+                <p>Язык: Русский</p>
+                <p>Настройки</p>
+            
+            </div>
+        </div>
+    </div>
 
     <div class="main-container">
         <div class="video-section">
@@ -30,7 +89,7 @@
                 <h2>{{ video.title }}</h2>
                 <div class="author-info">
                     <a href="{{ url_for('channel', username=video.author.username) }}">
-                        <img src="{{ url_for('serve_avatars', filename=video.author.avatar) if video.author.avatar else url_for('serve_avatars', filename='plus.png') }}" alt="Аватар автора" width="30" height="30">
+                        <img src="{{ url_for('serve_avatars', filename=video.author.avatar) if video.author.avatar else url_for('serve_avatars', filename='plus.png') }}" alt="Аватар автора" width="30" height="30" style="border-radius: 50%;object-fit: cover;">
                         <a  href="{{ url_for('channel', username=video.author.username) }}">@{{ Markup(video.author.username) }}</a>
                     </a>
                     <div class="likes-dislikes">
@@ -61,7 +120,7 @@
                                 <span><b>{{ related_video.title }}</b></span>
                             </a>
 
-                            <p style="color:#242424;"><br><a href="{{ url_for('channel', username=related_video.author.username) }}">@{{ Markup(related_video.author.username) }}</a> • {{ related_video.likes }} Likes </p>
+                            <p style="color:#242424;font-size: small;"><br><a href="{{ url_for('channel', username=related_video.author.username) }}">@{{ Markup(related_video.author.username) }} • {{ related_video.likes }} Likes </a></p>
                         </div>
                     </li>
                 {% endfor %}
@@ -70,11 +129,37 @@
     </div>
 
     <script>
+        const menuButton = document.getElementById('menu-button');
+        const menuOverlay = document.getElementById('menu-overlay');
+
+        menuButton.addEventListener('click', () => {
+            menuOverlay.classList.toggle('open');
+        });
+
+        menuOverlay.addEventListener('click', (event) => {
+            if (event.target === menuOverlay) {
+                menuOverlay.classList.remove('open');
+            }
+        });
+
         document.querySelector('.show-more').addEventListener('click', function() {
             const description = document.querySelector('.description');
             description.classList.toggle('expanded');
             this.textContent = description.classList.contains('expanded') ? 'Показать меньше' : 'Показать больше';
         });
+
+        document.getElementById('avatar').addEventListener('change', function() {
+        console.log("Файл выбран:", this.files[0].name);
+        handleAvatarChange(); // Вызываем функцию, чтобы отправить форму
+        });
+
+        function handleAvatarChange() {
+            const fileInput = document.getElementById('avatar');
+            const form = fileInput.closest('form'); 
+            if (fileInput.files && fileInput.files[0]) {
+                form.submit();
+            }
+        }
     </script>
 </body>
 </html>

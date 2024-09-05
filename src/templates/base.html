@@ -11,7 +11,7 @@
         <nav>
             {% if current_user %}
             <form action="{{ url_for('upload_avatar', username=current_user.username) }}" method="POST" enctype="multipart/form-data" style="display: inline-block;">
-                <label for="avatar" id="menu-button"> 
+                <label for="mini-avatar" id="menu-button"> 
                   <img src="{{ url_for('serve_avatars', filename=current_user.avatar) if current_user.avatar else url_for('serve_avatars', filename='plus.png') }}" width="30" height="30">
                 </label>
                 <button id="menu-button" style="display: none;"></button></form>
@@ -34,8 +34,11 @@
             <div class="menu-block">
                 <div class="user-info">
                     {% if current_user %}
-                        <p href="{{ url_for('channel', username=current_user.username) }}">
-                            <img src="{{ url_for('serve_avatars', filename=current_user.avatar) if current_user.avatar else url_for('serve_avatars', filename='plus.png') }}" alt="Аватар" width="60" height="60">
+                    <form action="{{ url_for('upload_avatar', username=current_user.username) }}" method="POST" enctype="multipart/form-data" style="display: inline-block;">
+                        <label for="avatar" id="avatar-button"> 
+                          <img src="{{ url_for('serve_avatars', filename=current_user.avatar) if current_user.avatar else url_for('serve_avatars', filename='plus.png') }}" width="60" height="60">
+                        </label>
+                        <input type="file" id="avatar" name="avatar" style="display: none;"></form>
                             <div class="user-details">
                                 <span class="username" >@{{ Markup(current_user.username) }}</span>
                                 <span class="subscribers" >{{ current_user.subscribers.count() }} подписчиков</span>
