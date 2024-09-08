@@ -1,4 +1,3 @@
-<!-- src/templates/video.html -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -15,22 +14,21 @@
         <h1><a href="/">NeTube</a></h1> 
         <nav>
             {% if current_user %}
-            <form action="{{ url_for('upload_avatar', username=current_user.username) }}" method="POST" enctype="multipart/form-data" style="display: inline-block;">
-                <label for="mini-avatar" id="menu-button"> 
-                  <img src="{{ url_for('serve_avatars', filename=current_user.avatar) if current_user.avatar else url_for('serve_avatars', filename='plus.png') }}" width="30" height="30" style="border-radius: 50%;object-fit: cover;">
-                </label>
-                <button id="menu-button" style="display: none;"></button></form>
+                <form action="{{ url_for('upload_avatar', username=current_user.username) }}" method="POST" enctype="multipart/form-data" style="display: inline-block;">
+                    <label for="mini-avatar" id="menu-button"> 
+                        <img src="{{ url_for('serve_avatars', filename=current_user.avatar) if current_user.avatar else url_for('serve_avatars', filename='plus.png') }}" width="30" height="30" style="border-radius: 50%;object-fit: cover;">
+                    </label>
+                    <button id="menu-button" style="display: none;"></button>
+                </form>
                 <a>•</a>
                 <a href="/upload"> <img src="{{ url_for('serve_icons', filename='upload.png') }}" width="30" height="30"></a>
                 <a>•</a>
                 <a href="{{ url_for('logout') }}"> <img src="{{ url_for('serve_icons', filename='log-out.png') }}" width="30" height="30" ></a>
-            
             {% else %}
                 <a href="/login">
                     <img src="{{ url_for('serve_avatars', filename='question.png') }}" width="30" height="30">
                 </a>
             {% endif %}
-
         </nav>
     </header>
 
@@ -39,42 +37,36 @@
             <div class="menu-block">
                 <div class="user-info">
                     {% if current_user %}
-                    <form action="{{ url_for('upload_avatar', username=current_user.username) }}" method="POST" enctype="multipart/form-data" style="display: inline-block;">
-                        <label for="avatar" id="avatar-button"> 
-                          <img src="{{ url_for('serve_avatars', filename=current_user.avatar) if current_user.avatar else url_for('serve_avatars', filename='plus.png') }}" width="60" height="60" style="border-radius: 50%;object-fit: cover;">
-                        </label>
-                        <input type="file" id="avatar" name="avatar" style="display: none;"></form>
-                            <div class="user-details">
-                                <span class="username" >@{{ Markup(current_user.username) }}</span>
-                                <span class="subscribers" >{{ current_user.subscribers.count() }} подписчиков</span>
-                            </div> 
-                            <div class="vert-separator"></div>
-                            <a href="{{ url_for('channel', username=current_user.username) }}" style="color: rgb(0, 110, 255);">Перейти на канал</a>
-                        </p>
-
+                        <form action="{{ url_for('upload_avatar', username=current_user.username) }}" method="POST" enctype="multipart/form-data" style="display: inline-block;">
+                            <label for="avatar" id="avatar-button"> 
+                                <img src="{{ url_for('serve_avatars', filename=current_user.avatar) if current_user.avatar else url_for('serve_avatars', filename='plus.png') }}" width="60" height="60" style="border-radius: 50%;object-fit: cover;">
+                            </label>
+                            <input type="file" id="avatar" name="avatar" style="display: none;">
+                        </form>
+                        <div class="user-details">
+                            <span class="username" >@{{ Markup(current_user.username) }}</span>
+                            <span class="subscribers" >{{ current_user.subscribers.count() }} подписчиков</span>
+                        </div> 
+                        <div class="vert-separator"></div>
+                        <a href="{{ url_for('channel', username=current_user.username) }}" style="color: rgb(0, 110, 255);">Перейти на канал</a>
                     {% else %}
                         <a href="/login">
                             <img src="{{ url_for('serve_avatars', filename='question.png') }}" width="60" height="60">
                         </a>
                     {% endif %}
                 </div>
-
             </div>
             <div class="separator"></div> 
             <div class="menu-block">
-
                 <a> <img style="margin-right: 15px;" src="{{ url_for('serve_icons', filename='changeuser.png') }}" width="30" height="30">Ваши данные на NeTube</a>
-                <a href="{{ url_for('login') }} "> <img style="margin-right: 15px;" src="{{ url_for('serve_icons', filename='switchacc.png') }}" width="30" height="30">Сменить аккаунт</a>                 
-                <a href="{{ url_for('logout') }}"> <img style="margin-right: 15px;" src="{{ url_for('serve_icons', filename='log-out.png') }}" width="30" height="30" >Выйти</a>
-
+                <a href="{{ url_for('login') }}"> <img style="margin-right: 15px;" src="{{ url_for('serve_icons', filename='switchacc.png') }}" width="30" height="30">Сменить аккаунт</a>                 
+                <a href="{{ url_for('logout') }}"> <img style="margin-right: 15px;" src="{{ url_for('serve_icons', filename='log-out.png') }}" width="30" height="30">Выйти</a>
             </div>
             <div class="separator"></div> 
             <div class="menu-block">
-
                 <p>Тема: Светлая</p>
                 <p>Язык: Русский</p>
                 <p>Настройки</p>
-            
             </div>
         </div>
     </div>
@@ -82,7 +74,7 @@
     <div class="main-container">
         <div class="video-section">
             <div class="video-info">
-                <video width="640" height="360" controls>
+                <video width="1280" height="720" controls>
                     <source src="{{ url_for('serve_videos', filename=video.url) }}" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
@@ -90,24 +82,46 @@
                 <div class="author-info">
                     <a href="{{ url_for('channel', username=video.author.username) }}">
                         <img src="{{ url_for('serve_avatars', filename=video.author.avatar) if video.author.avatar else url_for('serve_avatars', filename='plus.png') }}" alt="Аватар автора" width="30" height="30" style="border-radius: 50%;object-fit: cover;">
-                        <a  href="{{ url_for('channel', username=video.author.username) }}">@{{ Markup(video.author.username) }}</a>
+                        <a style="flex-direction: column; text-align: left;" href="{{ url_for('channel', username=video.author.username) }}">@{{ Markup(video.author.username) }} 
+                            <span style="font-size: 12px;">{{ video.author.subscribers.count() }} подписчиков</span>
+                        </a>
                     </a>
+
+                    {% if current_user != video.author %}
+                        <button id="subscribe-button" style="margin-right: 30px;" data-user-id="{{ video.author.id }}">
+                            {% if current_user and video.author in current_user.subscribed_to %}
+                                Отписаться
+                            {% else %}
+                                Подписаться
+                            {% endif %}
+                        </button>
+                    {% endif %}
+
                     <div class="likes-dislikes">
                         <a href="{{ url_for('like_video', video_name=video.url) }}">
-                            <button class="like-button"><img src="{{ url_for('serve_icons', filename='like.png') }}" width="15" height="15"> {{ video.likes }}</button>
+                            <button style="width: 90px; border-top-left-radius: 50px; border-bottom-left-radius: 50px; background-color: #bdbdbd9f; padding: 5px;" 
+                            class="like-button">
+                                <img src="{{ url_for('serve_icons', filename='like.png') }}" 
+                                width="18" height="18" style="margin-right: 15px; margin-left: 5px;"> {{ video.likes }}
+                            </button>
                         </a>
-                        <a>⁄</a>
                         <a href="{{ url_for('dislike_video', video_name=video.url) }}">
-                            <button class="dislike-button"><img src="{{ url_for('serve_icons', filename='dislike.png') }}" width="15" height="15"> {{ video.dislikes }}</button>
+                            <div class="vert-separator" style="background-color: #b6b6b6; height: 30px;"></div>
+                            <button class="dislike-button" 
+                            style="border-top-right-radius: 50px; border-bottom-right-radius: 50px; background-color: #bdbdbd9f; padding: 5px;"> 
+                                <!-- {{ video.dislikes }}  -->
+                                <img style="margin-left: 5px; margin-right: 5px;" src="{{ url_for('serve_icons', filename='dislike.png') }}" 
+                                width="18" height="18">
+                            </button>
                         </a>
                     </div>
+                    
                 </div>
-                <p class="description">{{ video.description }}</p>
-                <button class="show-more">Показать больше</button>
+                <p class="description">{{ video.description }}<button class="show-more">...ещё</button></p>
             </div>
         </div>
 
-        <div class="related-videos">
+        <div class="related-videos" style="display: none;">
             <h2>Другие видео</h2>
             <ul>
                 {% for related_video in related_videos %}
@@ -119,7 +133,7 @@
                             <a href="{{ url_for('video', video_name=related_video.url) }}">
                                 <span><b>{{ related_video.title }}</b></span>
                             </a>
-
+    
                             <p style="color:#242424;font-size: small;"><br><a href="{{ url_for('channel', username=related_video.author.username) }}">@{{ Markup(related_video.author.username) }} • {{ related_video.likes }} Likes </a></p>
                         </div>
                     </li>
@@ -131,28 +145,29 @@
     <script>
         const menuButton = document.getElementById('menu-button');
         const menuOverlay = document.getElementById('menu-overlay');
-
+        const subscribeButton = document.getElementById('subscribe-button');
+    
         menuButton.addEventListener('click', () => {
             menuOverlay.classList.toggle('open');
         });
-
+    
         menuOverlay.addEventListener('click', (event) => {
             if (event.target === menuOverlay) {
                 menuOverlay.classList.remove('open');
             }
         });
-
+    
         document.querySelector('.show-more').addEventListener('click', function() {
             const description = document.querySelector('.description');
             description.classList.toggle('expanded');
-            this.textContent = description.classList.contains('expanded') ? 'Показать меньше' : 'Показать больше';
+            this.textContent = description.classList.contains('expanded') ? 'Свернуть' : '...ещё';
         });
-
+    
         document.getElementById('avatar').addEventListener('change', function() {
-        console.log("Файл выбран:", this.files[0].name);
-        handleAvatarChange(); // Вызываем функцию, чтобы отправить форму
+            console.log("Файл выбран:", this.files[0].name);
+            handleAvatarChange(); 
         });
-
+    
         function handleAvatarChange() {
             const fileInput = document.getElementById('avatar');
             const form = fileInput.closest('form'); 
@@ -160,6 +175,52 @@
                 form.submit();
             }
         }
+    
+        subscribeButton.addEventListener('click', function() {
+            const userId = this.dataset.userId;
+            const isSubscribed = this.innerText === 'Отписаться';
+    
+            fetch(isSubscribed ? `/unsubscribe/${userId}` : `/subscribe/${userId}`, {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    subscribeButton.innerText = data.subscribed ? 'Отписаться' : 'Подписаться';
+
+                    // Обновляем количество подписчиков
+                    const subscribersSpan = document.querySelector('.author-info .subscribers'); // Или другой селектор, если нужно
+                    if (subscribersSpan) {
+                        subscribersSpan.innerText = '{{ video.author.subscribers.count() }} подписчиков'; // Используем data.subscribers
+                    }
+
+                    location.reload(); // Перезагрузка страницы
+
+                } else {
+                    console.error(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+            });
+        });
+    
+        // Скрываем "Другие видео" на больших экранах
+        const relatedVideos = document.querySelector('.related-videos');
+        const relatedVideosMobile = document.querySelector('.related-videos-mobile');
+        
+        window.addEventListener('resize', function() {
+            if (window.innerWidth >= 1080) {
+                relatedVideos.style.display = 'block'; 
+                relatedVideosMobile.style.display = 'none'; 
+            } else {
+                relatedVideos.style.display = 'none'; 
+                relatedVideosMobile.style.display = 'block'; 
+            }
+        });
+    
+        // Вызываем обработчик сразу при загрузке страницы
+        window.dispatchEvent(new Event('resize')); 
     </script>
 </body>
 </html>

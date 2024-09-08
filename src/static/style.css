@@ -99,3 +99,17 @@ a {
 .a img {
     border-radius: 0%;
 }
+
+
+#subscribe-button {
+    background-color: #bdbdbdf9;
+    border-radius: 50px;
+    width: 140px;
+    height: 30px;
+    border: none;
+}
+
+#subscribe-button:hover {
+    background-color: #808080;
+    color: #fff;
+}

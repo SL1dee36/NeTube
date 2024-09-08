@@ -8,19 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <h1><a href="/">NeTube</a></h1> 
-        <a href="/login">
-            {% if current_user %}
-                <!-- <img src="{{ url_for('serve_avatars', filename=current_user.avatar) if current_user.avatar else url_for('serve_avatars', filename='plus.png') }}" alt="Аватар" width="30" height="30"> -->
-                <!-- <a href="{{ url_for('channel', username=current_user.username) }}">Профиль</a> -->
-                <a href="{{ url_for('logout') }}">Выйти</a>
-            {% else %}
-                <img src="{{ url_for('serve_avatars', filename=current_user.avatar) if current_user.avatar else url_for('serve_avatars', filename='plus.png') }}" alt="Войти" width="30" height="30">
-            {% endif %}
-        </a>
-    </header>
-
+    
     <h1>Вход</h1>
     {% if error %}
         <p>{{ error }}</p>
@@ -29,7 +17,8 @@
         <input type="text" name="username" placeholder="Имя пользователя">
         <input type="password" name="password" placeholder="Пароль">
         <button type="submit">Войти</button>
+
+        <p>Нет аккаунта? <a href="/register">Зарегистрируйтесь</a></p>
     </form>
-    <p>Нет аккаунта? <a href="/register">Зарегистрируйтесь</a></p>
 </body>
 </html>

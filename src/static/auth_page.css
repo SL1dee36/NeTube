@@ -1,6 +1,6 @@
 /* src/static/auth_page.css */
 body {
-    font-family: 'Material Icons', sans-serif;
+    font-family: 'Roboto', sans-serif; /* Use Roboto font */
     background-color: #f9f9f9;
     margin: 0;
     padding: 0;
@@ -8,57 +8,15 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
-}
-
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    box-sizing: border-box; /* Чтобы padding учитывался в ширине */
-    position: fixed;
-    top: 0;
-    left: 0;
-}
-
-header h1 {
-    margin: 0;
-    font-size: 24px;
-    color: #333;
-}
-
-header a {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    color: inherit;
-}
-
-header a:link, header a:visited {
-    color: inherit;
-    text-decoration: none;
-}
-
-header a:hover, header a:active {
-    color: inherit;
-    text-decoration: none;
-}
-
-header img {
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
+    height: auto;
 }
 
 h1 {
-    margin-top: 100px; /* Отступ сверху, чтобы контент не перекрывался шапкой */
+    margin-top: 100px; 
     margin-bottom: 20px;
     font-size: 24px;
     color: #333;
+    font-weight: 700; /* Bold title */
 }
 
 form {
@@ -76,6 +34,8 @@ input[type="text"], input[type="password"] {
     margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 3px;
+    font-size: 16px; /* Slightly larger input font size */
+    color: #333;
 }
 
 button[type="submit"] {
@@ -85,4 +45,27 @@ button[type="submit"] {
     background-color: #4CAF50;
     color: white;
     cursor: pointer;
+    font-size: 16px; /* Larger button font size */
+    font-weight: 700; /* Bold button text */
+    transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+button[type="submit"]:hover {
+    background-color: #45a049; /* Slightly darker green on hover */
+}
+
+p {
+    margin-top: 10px;
+    font-size: 14px; /* Smaller font size for paragraphs */
+    color: #555; /* Darker gray for paragraphs */
+}
+
+p a {
+    text-decoration: none;
+    color: #386125; /* Green for links */
+    transition: color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+p a:hover {
+    color: #45a049; /* Darker green on hover */
 }

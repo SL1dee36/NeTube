@@ -1,25 +1,4 @@
 /* src/static/index_page.css */
-/* body {
-    font-family: 'Material Icons', sans-serif;
-    background-color: #f9f9f9;
-    margin: 0;
-    padding: 0;
-}
-
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-header h1 {
-    margin: 0;
-    font-size: 24px;
-    color: #333;
-} */
 
 header .search-container {
     display: flex;
@@ -30,8 +9,8 @@ header .search-container {
 
 header .search-container input[type="text"] {
     padding: 8px;
-    width: 100%; /* Занимает всю доступную ширину */
-    max-width: 400px; /* Максимальная ширина */
+    width: 500px; 
+    max-width: 500px;
     border: 1px solid #ccc;
     border-radius: 5px 0 0 5px;
     font-size: 13px;
@@ -48,126 +27,10 @@ header .search-container button {
 /* Медиа-запрос для телефонов */
 @media (max-width: 768px) {
     header .search-container input[type="text"] {
-        width: 80%; /* Занимает 80% доступной ширины */
-        max-width: 150px; /* Максимальная ширина */
+        width: 80%;
+        max-width: 150px; 
     }
 }
-
-/* header a {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    color: inherit;
-}
-
-header a:link, header a:visited {
-    color: inherit;
-    text-decoration: none;
-}
-
-header a:hover, header a:active {
-    color: inherit;
-    text-decoration: none;
-}
-
-header img {
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-}
-
-.video-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding: 20px;
-}
-
-.video-preview {
-    width: 320px;
-    margin: 15px;
-    border-radius: 10px;
-    overflow: hidden;
-    background-color: #ffffff00;
-    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-    transition: transform 0.3s, box-shadow 0.3s;
-    padding: 5px;
-}
-
-.video-preview:hover {
-    transform: scale(1.0);
-    background-color: #fff;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-}
-
-.video-preview img {
-    width: 100%;
-    height: 720;
-    object-fit: cover;
-    border-radius: 10px;
-    transition: transform 0.3s;
-}
-
-.video-preview:hover img {
-    transform: scale(1.01);
-}
-
-.video-preview .video-info {
-    padding: 10px;
-    text-align: left;
-}
-
-.video-preview .video-info img {
-    width: 20px;
-    height: 20px;
-    object-fit: cover;
-    border-radius: 50%;
-}
-
-.video-preview h3 img {
-    width: 30px;
-    height: 30px;
-    object-fit: cover;
-    border-radius: 50%;
-    margin-right: 5px;
-    vertical-align: middle;
-}
-
-.video-preview .video-info h3 {
-    margin: 0 0 5px;
-    font-size: 12px;
-    color: #333;
-}
-
-.video-preview .video-info p {
-    margin: 0;
-    font-size: 8px;
-    object-fit: cover;
-    color: #666;
-}
-
-a {
-    text-decoration: none;
-    color: inherit;
-}
-a:hover, a:active {
-    text-decoration: none;
-    color: inherit;
-}
-
-.channel-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 20px;
-}
-
-channel-container h2 {
-    margin-bottom: 10px;
-    font-size: 22px;
-    color: #333;
-} */
-
 
 body {
     font-family: 'Material Icons', sans-serif;
@@ -175,8 +38,6 @@ body {
     margin: 0;
     padding: 0;
 }
-
-
 
 header {
     display: flex;

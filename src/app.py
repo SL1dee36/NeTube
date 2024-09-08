@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect, url_for, send_from_directory, session, flash
+from flask import Flask, request, render_template, redirect, url_for, send_from_directory, session, flash, jsonify
 
 from models import db, User, Video, Like, Comment, DisLike
 import os
@@ -176,8 +176,9 @@ def subscribe(user_id):
         user_to_subscribe = User.query.get(user_id)
         user.subscribed_to.append(user_to_subscribe)
         db.session.commit()
-    return redirect(url_for('channel', username=user_to_subscribe.username))
-
+        new_count = user_to_subscribe.subscribers.count()  # Получаем обновленное количество
+        return jsonify({'status': 'success', 'subscribed': True, 'subscribers': new_count})
+    return jsonify({'status': 'error', 'message': 'User not logged in'}), 401
 
 @app.route('/unsubscribe/<int:user_id>', methods=['POST'])
 def unsubscribe(user_id):
@@ -186,7 +187,10 @@ def unsubscribe(user_id):
         user_to_unsubscribe = User.query.get(user_id)
         user.subscribed_to.remove(user_to_unsubscribe)
         db.session.commit()
-    return redirect(url_for('channel', username=user_to_unsubscribe.username))
+        new_count = user_to_unsubscribe.subscribers.count()  # Получаем обновленное количество
+        return jsonify({'status': 'success', 'subscribed': False, 'subscribers': new_count})
+    return jsonify({'status': 'error', 'message': 'User not logged in'}), 401
+
 
 
 @app.route('/static/videos/<path:filename>')

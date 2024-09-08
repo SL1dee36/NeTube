@@ -6,31 +6,28 @@
     <title>{{ user.username }} Channel</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='channel_page.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
-
         <h1><a href="/">NeTube</a></h1> 
         <nav>
             {% if current_user %}
-            <form action="{{ url_for('upload_avatar', username=current_user.username) }}" method="POST" enctype="multipart/form-data" style="display: inline-block;">
-                <label for="mini-avatar" id="menu-button"> 
-                  <img src="{{ url_for('serve_avatars', filename=current_user.avatar) if current_user.avatar else url_for('serve_avatars', filename='plus.png') }}" width="30" height="30" style="border-radius: 50%;object-fit: cover;">
-                </label>
-                <button id="menu-button" style="display: none;"></button></form>
+                <form action="{{ url_for('upload_avatar', username=current_user.username) }}" method="POST" enctype="multipart/form-data" style="display: inline-block;">
+                    <label for="mini-avatar" id="menu-button"> 
+                        <img src="{{ url_for('serve_avatars', filename=current_user.avatar) if current_user.avatar else url_for('serve_avatars', filename='plus.png') }}" width="30" height="30" style="border-radius: 50%;object-fit: cover;">
+                    </label>
+                    <button id="menu-button" style="display: none;"></button>
+                </form>
                 <a>•</a>
                 <a href="/upload"> <img src="{{ url_for('serve_icons', filename='upload.png') }}" width="30" height="30"></a>
                 <a>•</a>
                 <a href="{{ url_for('logout') }}"> <img src="{{ url_for('serve_icons', filename='log-out.png') }}" width="30" height="30" ></a>
-            
             {% else %}
                 <a href="/login">
                     <img src="{{ url_for('serve_avatars', filename='question.png') }}" width="30" height="30">
                 </a>
             {% endif %}
-
         </nav>
     </header>
 
@@ -39,88 +36,77 @@
             <div class="menu-block">
                 <div class="user-info">
                     {% if current_user %}
-                    <form action="{{ url_for('upload_avatar', username=current_user.username) }}" method="POST" enctype="multipart/form-data" style="display: inline-block;">
-                        <label for="avatar" id="avatar-button"> 
-                          <img src="{{ url_for('serve_avatars', filename=current_user.avatar) if current_user.avatar else url_for('serve_avatars', filename='plus.png') }}" width="60" height="60" style="border-radius: 50%;object-fit: cover;">
-                        </label>
-                        <input type="file" id="avatar" name="avatar" style="display: none;"></form>
-                            <div class="user-details">
-                                <span class="username" >@{{ Markup(current_user.username) }}</span>
-                                <span class="subscribers" >{{ current_user.subscribers.count() }} подписчиков</span>
-                            </div> 
-                            <div class="vert-separator"></div>
-                            <a href="{{ url_for('channel', username=current_user.username) }}" style="color: rgb(0, 110, 255);">Перейти на канал</a>
-                        </p>
-
+                        <form action="{{ url_for('upload_avatar', username=current_user.username) }}" method="POST" enctype="multipart/form-data" style="display: inline-block;">
+                            <label for="avatar" id="avatar-button"> 
+                                <img src="{{ url_for('serve_avatars', filename=current_user.avatar) if current_user.avatar else url_for('serve_avatars', filename='plus.png') }}" width="60" height="60" style="border-radius: 50%;object-fit: cover;">
+                            </label>
+                            <input type="file" id="avatar" name="avatar" style="display: none;">
+                        </form>
+                        <div class="user-details">
+                            <span class="username" >@{{ Markup(current_user.username) }}</span>
+                            <span class="subscribers" >{{ current_user.subscribers.count() }} подписчиков</span>
+                        </div> 
+                        <div class="vert-separator"></div>
+                        <a href="{{ url_for('channel', username=current_user.username) }}" style="color: rgb(0, 110, 255);">Перейти на канал</a>
                     {% else %}
                         <a href="/login">
                             <img src="{{ url_for('serve_avatars', filename='question.png') }}" width="60" height="60">
                         </a>
                     {% endif %}
                 </div>
-
             </div>
             <div class="separator"></div> 
             <div class="menu-block">
-
                 <a> <img style="margin-right: 15px;" src="{{ url_for('serve_icons', filename='changeuser.png') }}" width="30" height="30">Ваши данные на NeTube</a>
-                <a href="{{ url_for('login') }} "> <img style="margin-right: 15px;" src="{{ url_for('serve_icons', filename='switchacc.png') }}" width="30" height="30">Сменить аккаунт</a>                 
-                <a href="{{ url_for('logout') }}"> <img style="margin-right: 15px;" src="{{ url_for('serve_icons', filename='log-out.png') }}" width="30" height="30" >Выйти</a>
-
+                <a href="{{ url_for('login') }}"> <img style="margin-right: 15px;" src="{{ url_for('serve_icons', filename='switchacc.png') }}" width="30" height="30">Сменить аккаунт</a>                 
+                <a href="{{ url_for('logout') }}"> <img style="margin-right: 15px;" src="{{ url_for('serve_icons', filename='log-out.png') }}" width="30" height="30">Выйти</a>
             </div>
             <div class="separator"></div> 
             <div class="menu-block">
-
                 <p>Тема: Светлая</p>
                 <p>Язык: Русский</p>
                 <p>Настройки</p>
-            
             </div>
         </div>
     </div>
 
     <div class="channel-container">
         <h2>@{{ Markup(user.username) }}</h2>
-        
         <p style="font-size: 12px;">{{ user.subscribers.count() }} подписчиков</p> 
+
         {% if current_user and current_user.username != user.username %}
-            {% if user in current_user.subscribed_to %}
-                <form action="{{ url_for('unsubscribe', user_id=user.id) }}" method="POST">
-                    <button type="submit" class="unsubscribe-button">Отписаться</button>
-                </form>
-            {% else %}
-                <form action="{{ url_for('subscribe', user_id=user.id) }}" method="POST">
-                    <button type="submit" class="subscribe-button">Подписаться</button>
-                </form>
-            {% endif %}
+            <button id="subscribe-button" data-user-id="{{ user.id }}">
+                {% if current_user and user in current_user.subscribed_to %}
+                    Отписаться
+                {% else %}
+                    Подписаться
+                {% endif %}
+            </button>
         {% endif %}
 
         <div class="video-container">
             {% for video in videos %}
-            <div class="video-preview">
-                <a href="{{ url_for('video', video_name=video.url) }}">
-                    <img src="{{ url_for('serve_thumbnails', filename=video.url[:-4] + '.jpg') }}" alt="{{ video.title }}" width="320" height="180">
-                </a>
-                <h3>
-                    <a href="{{ url_for('channel', username=video.author.username) }}">
-                        <img src="{{ url_for('serve_avatars', filename=video.author.avatar) if video.author.avatar else url_for('static', filename='plus.png') }}"> 
+                <div class="video-preview">
+                    <a href="{{ url_for('video', video_name=video.url) }}">
+                        <img src="{{ url_for('serve_thumbnails', filename=video.url[:-4] + '.jpg') }}" alt="{{ video.title }}" width="320" height="180">
                     </a>
-                    {{ video.title }}
-                </h3>
-                <p><a href="{{ url_for('channel', username=video.author.username) }}" style="color: inherit; text-decoration: none;">@{{ Markup(video.author.username) }}</a> • {{ video.likes }} Likes </p>
-            </div>
+                    <h3>
+                        <a href="{{ url_for('channel', username=video.author.username) }}">
+                            <img src="{{ url_for('serve_avatars', filename=video.author.avatar) if video.author.avatar else url_for('static', filename='plus.png') }}"> 
+                        </a>
+                        {{ video.title }}
+                    </h3>
+                    <p><a href="{{ url_for('channel', username=video.author.username) }}" style="color: inherit; text-decoration: none;">@{{ Markup(video.author.username) }} • {{ video.likes }} Likes</a></p>
+                </div>
             {% endfor %}
         </div>
     </div>
-
-    <!-- {% if 'logged_in' in session and user.id == session['user_id'] %}
-        <a href="{{ url_for('logout') }}" style="display: block; text-align: center; margin-top: 20px;">Выйти</a>  
-    {% endif %} -->
 </body>
 
 <script>
     const menuButton = document.getElementById('menu-button');
     const menuOverlay = document.getElementById('menu-overlay');
+    const subscribeButton = document.getElementById('subscribe-button');
 
     menuButton.addEventListener('click', () => {
         menuOverlay.classList.toggle('open');
@@ -134,7 +120,7 @@
 
     document.getElementById('avatar').addEventListener('change', function() {
         console.log("Файл выбран:", this.files[0].name);
-        handleAvatarChange(); // Вызываем функцию, чтобы отправить форму
+        handleAvatarChange(); 
     });
 
     function handleAvatarChange() {
@@ -144,6 +130,33 @@
             form.submit();
         }
     }
-</script>
 
+    if (subscribeButton) {
+        subscribeButton.addEventListener('click', function() {
+            const userId = this.dataset.userId;
+            const isSubscribed = this.innerText === 'Отписаться';
+
+            fetch(isSubscribed ? `/unsubscribe/${userId}` : `/subscribe/${userId}`, {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    subscribeButton.innerText = data.subscribed ? 'Отписаться' : 'Подписаться';
+
+                    // Обновляем количество подписчиков
+                    const subscribersSpan = document.querySelector('.channel-container .subscribers'); // Или другой селектор, если нужно
+                    if (subscribersSpan) {
+                        subscribersSpan.innerText = data.subscribers + ' подписчиков'; // Используем data.subscribers
+                    }
+                } else {
+                    console.error(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+            });
+        });
+    }
+</script>
 </html>
