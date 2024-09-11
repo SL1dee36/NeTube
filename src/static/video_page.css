@@ -238,3 +238,29 @@ a:link, a:visited, a:hover, a:active {
     background-color: #ccc; /* Цвет линии */
     /* margin: 15px auto; Отступы сверху/снизу, центрирование по горизонтали */
 }
+
+.comments {
+    color: #000000;
+    padding: 10px;
+    border-radius: 10px; 
+    font-size: 16px;
+}
+
+.comment-item {
+    display: flex;
+    align-items: flex-start; 
+    margin-bottom: 10px;
+}
+
+.comment-item img {
+    margin-right: 10px; 
+}
+
+.comment-content {
+    flex: 1; /* Занимаем оставшееся пространство */
+}
+
+.comment-content a {
+    text-decoration: none;
+    color: rgb(0, 0, 0); 
+}

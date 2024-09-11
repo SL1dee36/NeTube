@@ -1,9 +1,10 @@
-# src/models.py
 from flask_sqlalchemy import SQLAlchemy
+import datetime
+from datetime import datetime, timezone
 
 db = SQLAlchemy()
 
-# Association table for subscriptions (moved here)
+# Association table for subscriptions
 subscriptions = db.Table('subscriptions',
     db.Column('subscriber_id', db.Integer, db.ForeignKey('user.id')),
     db.Column('subscribed_to_id', db.Integer, db.ForeignKey('user.id'))
@@ -30,7 +31,8 @@ class Video(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     likes = db.Column(db.Integer, default=0)
     dislikes = db.Column(db.Integer, default=0)
-    comments = db.relationship('Comment', backref='video', lazy=True)
+    comments = db.relationship('Comment', lazy=True)  # Removed backref
+    views = db.Column(db.Integer, default=0)
 
 class Like(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -42,9 +44,12 @@ class DisLike(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     video_id = db.Column(db.Integer, db.ForeignKey('video.id'), nullable=False)
 
-
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    content = db.Column(db.String(500), nullable=False)
+    content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.now(timezone.utc))
+    user = db.relationship('User', backref='comments') 
+
     video_id = db.Column(db.Integer, db.ForeignKey('video.id'), nullable=False)
+    video = db.relationship('Video') 

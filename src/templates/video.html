@@ -74,7 +74,7 @@
     <div class="main-container">
         <div class="video-section">
             <div class="video-info">
-                <video width="1280" height="720" controls>
+                <video id="NeTubeVideoPlayer" width="1280" height="720" controls>
                     <source src="{{ url_for('serve_videos', filename=video.url) }}" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
@@ -97,9 +97,16 @@
                         </button>
                     {% endif %}
 
-                    <div class="likes-dislikes">
+                    <p style="width: auto;min-width: 100px;
+                    text-align: center;margin-left: 15px;margin-right: 15px; 
+                    border-radius: 50px; background-color: #bdbdbd9f; 
+                    padding: 5px;height: 20px;text-align: center;">
+                    
+                        {{ video.views }} views </p>
+
+                    <div class="likes-dislikes" >
                         <a href="{{ url_for('like_video', video_name=video.url) }}">
-                            <button style="width: 90px; border-top-left-radius: 50px; border-bottom-left-radius: 50px; background-color: #bdbdbd9f; padding: 5px;" 
+                            <button style="width: auto;max-width: 200px;min-width: 80px;; border-top-left-radius: 50px; border-bottom-left-radius: 50px; background-color: #bdbdbd9f; padding: 5px;" 
                             class="like-button">
                                 <img src="{{ url_for('serve_icons', filename='like.png') }}" 
                                 width="18" height="18" style="margin-right: 15px; margin-left: 5px;"> {{ video.likes }}
@@ -118,6 +125,33 @@
                     
                 </div>
                 <p class="description">{{ video.description }}<button class="show-more">...ещё</button></p>
+
+                <div class="comments">
+
+                    <form action="{{ url_for('add_comment', video_name=video.url) }}" method="post">
+                        <textarea style="width: 100%;height: auto;min-width: 100%;max-width: 100%;min-height: 20px;border: none; background-color: transparent;border-bottom: 1px solid #ccc; " name="content" placeholder="Оставьте комментарий"></textarea>
+                        <button style="cursor: pointer;width: 100px;height: auto;border-radius: 50px;border: none;padding: 5px; background-color: #bdbdbd9f;" type="submit">Отправить</button>
+                    </form>
+
+                
+                    <h3>Комментарии</h3>
+                    <ul>
+                        {% for comment in video.comments %}
+                        <li class="comment-item">
+                            <a href="{{ url_for('channel', username=comment.user.username) }}">
+                                <img src="{{ url_for('serve_avatars', filename=comment.user.avatar) if comment.user.avatar else url_for('serve_avatars', filename='plus.png') }}" 
+                                     alt="Аватар автора" width="30" height="30" style="border-radius: 50%;object-fit: cover;">
+                            </a>
+                            <div class="comment-content">
+                                <a href="{{ url_for('channel', username=comment.user.username) }}">
+                                    @{{ Markup(comment.user.username) }}
+                                </a>
+                                <span style="color: #4d4d4d;">{{ comment.content }}</span>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div> 
             </div>
         </div>
 
@@ -134,7 +168,7 @@
                                 <span><b>{{ related_video.title }}</b></span>
                             </a>
     
-                            <p style="color:#242424;font-size: small;"><br><a href="{{ url_for('channel', username=related_video.author.username) }}">@{{ Markup(related_video.author.username) }} • {{ related_video.likes }} Likes </a></p>
+                            <p style="color:#242424;font-size: small;"><br><a href="{{ url_for('channel', username=related_video.author.username) }}">@{{ Markup(related_video.author.username) }} • {{ related_video.views }} views </a></p>
                         </div>
                     </li>
                 {% endfor %}
@@ -218,9 +252,7 @@
                 relatedVideosMobile.style.display = 'block'; 
             }
         });
-    
-        // Вызываем обработчик сразу при загрузке страницы
-        window.dispatchEvent(new Event('resize')); 
+
     </script>
 </body>
 </html>

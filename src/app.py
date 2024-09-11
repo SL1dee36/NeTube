@@ -159,6 +159,9 @@ def upload():
 def video(video_name):
     video = Video.query.filter_by(url=video_name).first_or_404()
     current_user = get_current_user()
+    # Увеличиваем количество просмотров
+    video.views += 1
+    db.session.commit()
 
     related_videos = Video.query.filter(Video.id != video.id).limit(9).all()
 
@@ -168,6 +171,16 @@ def video(video_name):
                            current_user=current_user,
                            related_videos=related_videos)
 
+@app.route('/video/<video_name>/comment', methods=['POST'])
+def add_comment(video_name):
+    video = Video.query.filter_by(url=video_name).first_or_404()
+    current_user = get_current_user()
+    if current_user:
+        content = request.form.get('content')
+        comment = Comment(content=content, user=current_user, video=video)
+        db.session.add(comment)
+        db.session.commit()
+    return redirect(url_for('video', video_name=video_name))
 
 @app.route('/subscribe/<int:user_id>', methods=['POST'])
 def subscribe(user_id):

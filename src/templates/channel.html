@@ -92,11 +92,11 @@
                     </a>
                     <h3>
                         <a href="{{ url_for('channel', username=video.author.username) }}">
-                            <img src="{{ url_for('serve_avatars', filename=video.author.avatar) if video.author.avatar else url_for('static', filename='plus.png') }}"> 
+                            <img src="{{ url_for('serve_avatars', filename=video.author.avatar) if video.author.avatar else url_for('serve_avatars', filename='plus.png') }}"> 
                         </a>
                         {{ video.title }}
                     </h3>
-                    <p><a href="{{ url_for('channel', username=video.author.username) }}" style="color: inherit; text-decoration: none;">@{{ Markup(video.author.username) }} • {{ video.likes }} Likes</a></p>
+                    <p><a href="{{ url_for('channel', username=video.author.username) }}" style="color: inherit; text-decoration: none;">@{{ Markup(video.author.username) }} • {{ video.views }} views • {{ video.likes }} Likes </a></p>
                 </div>
             {% endfor %}
         </div>
