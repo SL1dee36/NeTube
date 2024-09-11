@@ -65,7 +65,8 @@ NeTube/
 [MIT]
 
 
-![image](https://github.com/user-attachments/assets/759bce9e-5f92-4cbf-a52c-9bf50807391d)
+![image](https://github.com/user-attachments/assets/b7629010-373d-4c55-8780-b8cdce19d24d)
+
 
 
 
