@@ -1,0 +1,362 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ video.title }} - NeTube{% endblock %}
+
+{% block content %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/video_player.css') }}">
+<div class="container mx-auto p-4 space-y-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Main Video Section -->
+        <div class="lg:col-span-2">
+     <!-- Custom Video Player -->
+<div id="videoPlayerContainer" class="relative group bg-black rounded overflow-hidden">
+    <video id="NeTubeVideoPlayer" class="w-full rounded-md">
+        <source src="{{ url_for('static_bp.serve_videos', filename=video.url) }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <!-- Player Controls -->
+    <div id="playerControls" class="absolute bottom-0 left-0 right-0 flex items-center justify-between p-2 bg-black bg-opacity-50 transition-opacity opacity-0 group-hover:opacity-100 z-50">
+<div class="flex items-center space-x-2 w-full">
+    <!-- Play/Pause Button -->
+    <button id="playPause" class="text-white hover:text-gray-300">
+        <i class="fas fa-play"></i>
+    </button>
+
+    <!-- Mute/Unmute Button -->
+    <button id="muteUnmute" class="text-white hover:text-gray-300">
+        <i class="fas fa-volume-up"></i>
+    </button>
+
+    <!-- Volume Slider and Display -->
+    <div class="flex items-center space-x-2">
+        <input type="range" id="volume" min="0" max="1" step="0.01" value="1" class="w-16 h-1 bg-gray-600 rounded cursor-pointer">
+        <span id="volumeText" class="text-xs text-white">100</span>
+    </div>
+
+        <input type="range" id="seekBar" value="0" class="w-full h-1 bg-gray-600 rounded cursor-pointer">
+    <!-- Current Time and Duration -->
+    <span id="currentTime" class="text-xs text-white">00:00</span>
+    <span class="text-xs text-white">/</span>
+    <span id="duration" class="text-xs text-white">00:00</span>
+</div>
+
+        <div class="flex items-center space-x-2">
+
+
+
+<!-- Settings Button (for speed and autoplay) -->
+<div class="relative ml-2">
+    <button id="settings" class="text-white hover:text-gray-300">
+        <i class="fas fa-cog"></i>
+    </button>
+<div id="settingsMenu" class="absolute border hidden bottom-0 right-0 ml-2 mb-8 w-40 bg-black bg-opacity-80 text-white rounded-lg shadow-lg z-50">
+    <div class="px-4 py-2">
+        <label for="speed" class="block text-sm">Скорость:</label>
+<select id="speed" class="w-full mt-1 p-2 rounded-lg bg-black text-white border border-gray-700">
+            <option value="0.5">0.5x</option>
+            <option value="1" selected>1x</option>
+            <option value="1.5">1.5x</option>
+            <option value="2">2x</option>
+        </select>
+    </div>
+    <div class="px-4 py-2">
+        <label for="autoplay" class="inline-flex items-center">
+<input type="checkbox" id="autoplay" class="form-checkbox text-blue-400 bg-black border-gray-700">
+            <span class="ml-2 text-sm">Повтор</span>
+        </label>
+    </div>
+</div>
+
+
+</div>
+
+            <!-- Picture-in-Picture Button -->
+            <button id="pip" class="text-white hover:text-gray-300">
+                <i class="fas fa-clone"></i>
+            </button>
+
+            <button id="fullscreen" class="text-white hover:text-gray-300">
+                <i class="fas fa-expand"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Video Title -->
+<h2 class="text-2xl font-bold mt-4 mb-4">{{ video.title }}</h2>
+
+            <!-- Video Details -->
+            <div class="flex items-center justify-between mt-4 space-x-4">
+                <div class="flex items-center space-x-4">
+                    <a href="{{ url_for('channel_bp.channel', username=video.author.username) }}" class="flex items-center space-x-2">
+                        <img src="{{ url_for('static_bp.serve_avatars', filename=video.author.avatar) if video.author.avatar else url_for('static_bp.serve_avatars', filename='plus.png') }}" alt="Аватар автора" class="w-10 h-10 rounded-full border border-gray-300">
+                        <div class="text-left">
+<span class="font-semibold hover:text-blue-500">@{{ video.author.username }}</span>
+<span class="text-sm text-gray-500 hover:text-gray-700 subscribers">{{ video.author.subscribers.count() }} подписчиков</span>
+
+                        </div>
+                    </a>
+
+<!-- Subscribe Button -->
+{% if current_user != video.author %}
+    <button id="subscribe-button" class="px-4 py-2 rounded-full border transition-colors duration-300 {{ 'bg-gray-200 text-gray-600 border-gray-300' if current_user and video.author in current_user.subscribed_to else 'bg-red-500 text-white border-red-500' }}" data-user-id="{{ video.author.id }}" data-subscribed="{{ current_user and video.author in current_user.subscribed_to }}">
+        {% if current_user and video.author in current_user.subscribed_to %}
+            Отписаться
+        {% else %}
+            Подписаться
+        {% endif %}
+    </button>
+{% endif %}
+
+
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <p class="text-gray-700">{{ video.views }} просмотров</p>
+
+<!-- Like/Dislike Buttons -->
+<div class="flex items-center ml-4 space-x-2">
+    <button id="like-button" class="flex items-center px-4 py-2 rounded-full {{ 'bg-blue-500 text-white' if video.liked else 'bg-gray-200 hover:bg-blue-100' }}" data-liked="{{ video.liked }}">
+        <img src="{{ url_for('static_bp.serve_icons', filename='like.png') }}" class="w-6 h-6 mr-2">
+        <span id="like-count">{{ video.likes }}</span>
+    </button>
+    <button id="dislike-button" class="flex items-center px-4 py-2 rounded-full {{ 'bg-red-500 text-white' if video.disliked else 'bg-gray-200 hover:bg-red-100' }}" data-disliked="{{ video.disliked }}">
+        <img src="{{ url_for('static_bp.serve_icons', filename='dislike.png') }}" class="w-6 h-6 mr-2">
+        <span id="dislike-count">{{ video.dislikes }}</span>
+    </button>
+</div>
+
+                </div>
+            </div>
+
+<!-- Video Description -->
+<div class="mt-4">
+    <p id="description" class="text-gray-700">
+        <span id="short-description">{{ video.description[:200] }}...</span>
+        <span id="full-description" class="hidden">{{ video.description }}</span>
+    </p>
+    <button id="show-more-button" class="text-blue-500">
+        Показать больше
+    </button>
+</div>
+
+<!-- Comments Section -->
+<div class="mt-6 bg-white p-4 rounded-lg shadow-md">
+    <h3 class="text-lg font-semibold mb-4">Комментарии</h3>
+    <form id="comment-form" data-video-url="{{ video.url }}" class="mb-4">
+        <textarea id="comment-content" class="w-full p-2 border border-gray-300 rounded-lg" name="content" placeholder="Оставьте комментарий"></textarea>
+        <button id="submit-comment" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600" type="button">Отправить</button>
+    </form>
+
+    <ul id="comments-list" class="space-y-4">
+        {% for comment in video.comments %}
+            <li id="comment-{{ comment.id }}" class="bg-gray-100 p-4 rounded-lg shadow-sm">
+                <div class="flex items-start space-x-3">
+                    <a href="{{ url_for('channel_bp.channel', username=comment.user.username) }}" class="flex-shrink-0">
+                        <img src="{{ url_for('static_bp.serve_avatars', filename=comment.user.avatar) if comment.user.avatar else url_for('static_bp.serve_avatars', filename='plus.png') }}" alt="Аватар автора" class="w-10 h-10 rounded-full object-cover border-2 border-gray-300">
+                    </a>
+                    <div class="flex-1">
+                        <a href="{{ url_for('channel_bp.channel', username=comment.user.username) }}" class="font-semibold text-blue-500">@{{ Markup(comment.user.username) }}</a>
+                        <p class="text-gray-700 mt-1">{{ comment.content }}</p>
+                    </div>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+
+        </div>
+
+        <!-- Related Videos Section -->
+        <div class="lg:col-span-1">
+            <h2 class="text-xl font-bold mb-4">Другие видео</h2>
+            <ul class="space-y-4">
+                {% for related_video in related_videos %}
+                <div class="video-preview bg-white shadow-md rounded-lg hover:shadow-xl transition duration-300">
+
+                    <!-- Превью видео -->
+                    <a href="{{ url_for('video_bp.video', video_name=related_video.url) }}" class="block">
+                        <img src="{{ url_for('static_bp.serve_thumbnails', filename=related_video.url[:-4] + '.jpg') }}" alt="{{ related_video.title }}" class="w-full h-48 object-cover rounded-t-lg">
+                    </a>
+
+                    <!-- Описание видео -->
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800">
+                            <a href="{{ url_for('channel_bp.channel', username=related_video.author.username) }}" class="flex items-center space-x-2">
+                                <img src="{{ url_for('static_bp.serve_avatars', filename=video.author.avatar) if video.author.avatar else url_for('static_bp.serve_avatars', filename='plus.png') }}" class="w-8 h-8 rounded-full object-cover">
+                                <span>{{ related_video.title }}</span>
+                            </a>
+                        </h3>
+                        <p class="text-sm text-gray-600">
+                            <a href="{{ url_for('channel_bp.channel', username=related_video.author.username) }}" class="hover:underline">@{{ related_video.author.username }} • {{ related_video.views }} просмотров • {{ related_video.likes }} лайков</a>
+                        </p>
+                    </div>
+                </div>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+    <script>
+
+    document.getElementById('show-more-button').addEventListener('click', function() {
+        var shortDescription = document.getElementById('short-description');
+        var fullDescription = document.getElementById('full-description');
+        var button = document.getElementById('show-more-button');
+
+        if (fullDescription.classList.contains('hidden')) {
+            // Show full description
+            shortDescription.classList.add('hidden');
+            fullDescription.classList.remove('hidden');
+            button.textContent = 'Скрыть';
+        } else {
+            // Show short description
+            shortDescription.classList.remove('hidden');
+            fullDescription.classList.add('hidden');
+            button.textContent = 'Показать больше';
+        }
+    });
+
+
+     const likeButton = document.getElementById('like-button');
+        likeButton.addEventListener('click', function() {
+const isLiked = this.dataset.liked === 'true';
+            fetch(`{{ url_for('video_like_bp.like_video', video_name=video.url) }}`, {
+            method: 'POST'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                likeButton.dataset.liked = !isLiked;
+                document.getElementById('like-count').textContent = data.likes;
+                document.getElementById('dislike-count').textContent = data.dislikes;
+            } else {
+                console.error(data.message);
+            }
+        })
+        .catch(error => console.error('Ошибка:', error));
+    });
+
+    const dislikeButton = document.getElementById('dislike-button');
+    dislikeButton.addEventListener('click', function() {
+        const isDisliked = this.dataset.disliked === 'true';
+
+            fetch(`{{ url_for('video_like_bp.dislike_video', video_name=video.url) }}`, {
+            method: 'POST'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                dislikeButton.dataset.disliked = !isDisliked;
+                document.getElementById('like-count').textContent = data.likes;
+                document.getElementById('dislike-count').textContent = data.dislikes;
+            } else {
+                console.error(data.message);
+            }
+        })
+        .catch(error => console.error('Ошибка:', error));
+    });
+
+            const commentsList = document.getElementById('comments-list');
+            const submitCommentBtn = document.getElementById('submit-comment')
+            // Добавление комментария в список
+    submitCommentBtn.addEventListener('click', async () => {
+    const content = document.getElementById('comment-content').value;
+    if (content.trim() === '') {
+        alert('Комментарий не может быть пустым');
+        return;
+    }
+
+    try {
+        const addCommentUrl = '{{ url_for("video_bp.add_comment", video_name=video.url) }}'
+        const response = await fetch(addCommentUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ content }),
+        });
+
+        // Логируем полный ответ для проверки
+        const text = await response.text();
+
+        // Пробуем парсить JSON
+        const comment = JSON.parse(text);
+
+        if (response.ok) {
+            addCommentToList(comment.comment);
+            document.getElementById('comment-content').value = ''; // Очистка поля ввода
+        } else {
+            alert(comment.message);
+        }
+    } catch (error) {
+        console.error('Ошибка при отправке комментария:', error);
+        alert('Произошла ошибка. Пожалуйста, попробуйте снова.');
+    }
+});
+
+function addCommentToList(comment) {
+    // Получаем элемент списка, куда будут добавляться комментарии
+    const commentList = document.querySelector('#comments-list');
+
+    // Создаем новый элемент <li>
+    const li = document.createElement('li');
+    li.id = `comment-${comment.id}`;
+    li.classList.add('bg-gray-100', 'p-4', 'rounded-lg', 'shadow-sm');
+
+    // Создаем div для выравнивания элементов
+    const containerDiv = document.createElement('div');
+    containerDiv.classList.add('flex', 'items-start', 'space-x-3');
+
+    // Создаем ссылку для аватара
+    const avatarLink = document.createElement('a');
+    avatarLink.href = `/channel/${comment.user.username}`;
+    avatarLink.classList.add('flex-shrink-0');
+
+    // Создаем изображение аватара
+    const avatarImage = document.createElement('img');
+    avatarImage.src = comment.user.avatar ? `/static/avatars/users/${comment.user.avatar}` : `/static/avatars/plus.png`;
+    avatarImage.alt = 'Аватар автора';
+    avatarImage.classList.add('w-10', 'h-10', 'rounded-full', 'object-cover', 'border-2', 'border-gray-300');
+
+    // Добавляем аватар в ссылку
+    avatarLink.appendChild(avatarImage);
+
+    // Создаем div для содержимого комментария
+    const contentDiv = document.createElement('div');
+    contentDiv.classList.add('flex-1');
+
+    // Создаем ссылку на канал автора
+    const usernameLink = document.createElement('a');
+    usernameLink.href = `/channel/${comment.user.username}`;
+    usernameLink.classList.add('font-semibold', 'text-blue-500');
+    usernameLink.textContent = `@${comment.user.username}`;
+
+    // Создаем параграф для текста комментария
+    const commentContent = document.createElement('p');
+    commentContent.classList.add('text-gray-700', 'mt-1');
+    commentContent.textContent = comment.content;
+
+    // Добавляем ссылку на автора и текст комментария в div
+    contentDiv.appendChild(usernameLink);
+    contentDiv.appendChild(commentContent);
+
+    // Добавляем аватар и содержимое комментария в контейнер
+    containerDiv.appendChild(avatarLink);
+    containerDiv.appendChild(contentDiv);
+
+    // Добавляем контейнер в <li>
+    li.appendChild(containerDiv);
+
+    // Добавляем <li> в список комментариев
+    commentList.appendChild(li);
+}
+
+
+    </script>
+    <script src="{{ url_for('static', filename='js/subscribe_handler.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/video_player.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,58 @@
+<!-- src/templates/edit_user.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Редактировать пользователя</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <h1>Редактировать пользователя {{ user.username }}</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="flashes">
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <form method="post" enctype="multipart/form-data">
+        <label for="username">Имя пользователя:</label>
+        <input type="text" id="username" name="username" value="{{ user.username }}">
+
+        <label for="password">Пароль:</label>
+        <input type="password" id="password" name="password" placeholder="Введите новый пароль (необязательно)">
+
+        <label for="avatar">Аватар:</label>
+        <input type="file" id="avatar" name="avatar">
+
+        <h2>Подписчики:</h2>
+        <ul>
+            {% for subscriber in user.subscribers %}
+                <li>{{ subscriber.username }}
+                    <button type="submit" name="remove_subscriber" value="{{ subscriber.username }}">Удалить</button>
+                </li>
+            {% endfor %}
+        </ul>
+        <label for="add_subscriber">Добавить подписчика:</label>
+        <input type="text" id="add_subscriber" name="add_subscriber">
+        <button type="submit" name="add_subscriber">Добавить</button>
+
+        <h2>Видео:</h2>
+        <ul>
+            {% for video in user.videos %}
+                <li>{{ video.title }}
+                    <button type="submit" name="delete_video_id" value="{{ video.id }}">Удалить</button>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <button type="submit">Сохранить изменения</button>
+    </form>
+</body>
+</html>

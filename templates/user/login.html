@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="flex items-center justify-center h-screen bg-gray-100">
+    <div class="w-full max-w-md p-8 bg-white shadow-lg rounded-lg">
+        <h1 class="text-2xl font-bold mb-4 text-center">Вход</h1>
+
+        {% if error %}
+            <p class="text-red-500 text-center mb-4">{{ error }}</p>
+        {% endif %}
+
+        <form action="{{ url_for('user_bp.login') }}" method="post" class="space-y-4">
+            <input type="text" name="username" placeholder="Имя пользователя" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            <input type="password" name="password" placeholder="Пароль" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            <button type="submit" class="w-full py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Войти</button>
+        </form>
+
+        <p class="mt-4 text-center">Нет аккаунта? <a href="{{ url_for('user_bp.register') }}" class="text-blue-500 hover:underline">Зарегистрируйтесь</a></p>
+    </div>
+</div>
+{% endblock %}

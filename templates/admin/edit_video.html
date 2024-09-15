@@ -1,0 +1,34 @@
+<!-- src/templates/edit_video.html -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Редактировать видео</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    </head>
+<body>
+    <h1>Редактировать видео {{ video.title }}</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="flashes">
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <form method="post" enctype="multipart/form-data">
+        <label for="title">Название видео:</label>
+        <input type="text" id="title" name="title" value="{{ video.title }}">
+
+        <label for="description">Описание:</label>
+        <textarea id="description" name="description">{{ video.description }}</textarea>
+
+        <button type="submit">Сохранить изменения</button>
+    </form>
+</body>
+</html>

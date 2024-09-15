@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %}Загрузка видео - NeTube{% endblock %}
+
+{% block content %}
+    <style>
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+
+    <main class="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+        <form action="{{ url_for('video_bp.upload') }}" method="post" enctype="multipart/form-data" id="upload-form" class="bg-white p-8 rounded-lg shadow-xl w-full max-w-lg">
+            <h1 class="text-3xl font-bold mb-6 text-gray-800 text-center">Загрузить видео</h1>
+
+            <label for="title" class="block text-gray-700 mb-2 font-semibold">Название видео:</label>
+            <input type="text" id="title" name="title" placeholder="Введите название видео" class="w-full mb-4 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700">
+
+            <label for="description" class="block text-gray-700 mb-2 font-semibold">Описание:</label>
+            <textarea id="description" name="description" placeholder="Добавьте описание видео" class="w-full h-32 mb-2 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700"></textarea>
+            <p id="description-count" class="text-sm text-gray-500 mb-2">0 / 500</p>
+            <p id="description-warning" class="text-red-500 text-sm hidden mb-4">Предупреждение: Длина описания превышает 500 символов.</p>
+
+            <!-- Custom styled file input with file name display -->
+            <label for="file" class="block text-gray-700 mb-2 font-semibold">Выберите файл:</label>
+            <label for="file" class="w-full flex items-center justify-center py-3 mb-2 border border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-100 transition duration-200">
+                <span id="file-name" class="text-blue-600 font-semibold">Нажмите для выбора файла</span>
+                <input type="file" name="file" id="file" class="hidden">
+            </label>
+            <p id="selected-file-name" class="text-sm text-gray-500 mb-6 hidden"></p>
+
+            <button type="submit" id="upload-button" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition duration-200 font-semibold">Загрузить</button>
+        </form>
+    </main>
+
+    <!-- Loading overlay -->
+    <div id="loading-overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="loading-spinner w-16 h-16 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"></div>
+    </div>
+
+    <script>
+        const descriptionInput = document.getElementById('description');
+        const descriptionCount = document.getElementById('description-count');
+        const descriptionWarning = document.getElementById('description-warning');
+        const uploadButton = document.getElementById('upload-button');
+        const uploadForm = document.getElementById('upload-form');
+        const loadingOverlay = document.getElementById('loading-overlay');
+
+        const fileInput = document.getElementById('file');
+        const fileNameLabel = document.getElementById('file-name');
+        const selectedFileName = document.getElementById('selected-file-name');
+
+        descriptionInput.addEventListener('input', () => {
+            const currentLength = descriptionInput.value.length;
+            descriptionCount.textContent = `${currentLength} / 500`;
+
+            if (currentLength > 500) {
+                descriptionWarning.classList.remove('hidden');
+            } else {
+                descriptionWarning.classList.add('hidden');
+            }
+        });
+
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length > 0) {
+                const fileName = fileInput.files[0].name;
+                selectedFileName.textContent = `Выбран файл: ${fileName}`;
+                selectedFileName.classList.remove('hidden');
+                fileNameLabel.textContent = "Изменить файл";
+            } else {
+                fileNameLabel.textContent = "Нажмите для выбора файла";
+                selectedFileName.classList.add('hidden');
+            }
+        });
+
+        uploadButton.addEventListener('click', (event) => {
+            event.preventDefault(); // Предотвращаем стандартную отправку формы
+            loadingOverlay.classList.remove('hidden');
+            uploadForm.submit();
+        });
+
+        uploadForm.addEventListener('submit', () => {
+            loadingOverlay.classList.add('hidden');
+        });
+    </script>
+{% endblock %}

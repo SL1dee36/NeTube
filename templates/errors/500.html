@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}Ошибка 500 - NeTube{% endblock %}
+
+{% block content %}
+    <div class="min-h-screen flex items-center justify-center bg-gray-100">
+        <div class="text-center p-6 bg-white shadow-md rounded-md">
+            <h1 class="text-4xl font-bold text-red-500">500</h1>
+            <h2 class="text-xl font-semibold text-gray-700">Внутренняя ошибка сервера</h2>
+            <p class="mt-4 text-gray-600">Произошла ошибка на сервере. Мы уже работаем над её исправлением. Пожалуйста, попробуйте позже.</p>
+            {% if error %}
+                <div class="mt-6 p-4 bg-gray-200 border border-gray-300 rounded">
+                    <h3 class="text-lg font-semibold text-gray-800">Детали ошибки:</h3>
+                    <pre class="text-sm text-gray-700 overflow-x-auto">{{ error }}</pre>
+                </div>
+            {% endif %}
+            <a href="{{ url_for('main_bp.index') }}" class="mt-4 inline-block px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">На главную</a>
+        </div>
+    </div>
+{% endblock %}

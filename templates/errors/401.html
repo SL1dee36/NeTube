@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Ошибка 401 - NeTube{% endblock %}
+
+{% block content %}
+    <div class="min-h-screen flex items-center justify-center bg-gray-100">
+        <div class="text-center p-6 bg-white shadow-md rounded-md">
+            <h1 class="text-4xl font-bold text-red-500">401</h1>
+            <h2 class="text-xl font-semibold text-gray-700">Неавторизован</h2>
+            <p class="mt-4 text-gray-600">Для доступа к этой странице требуется авторизация. Пожалуйста, войдите в систему или зарегистрируйтесь.</p>
+            <a href="{{ url_for('user_bp.login') }}" class="mt-4 inline-block px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Войти</a>
+        </div>
+    </div>
+{% endblock %}
