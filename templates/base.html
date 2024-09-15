@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}NeTube{% endblock %}</title>
+ <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+<body class="bg-gray-100 text-gray-900 font-roboto">
+<header class="bg-white shadow-md p-4">
+    <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
+        <h1 class="text-2xl font-bold mb-4 md:mb-0">
+            <a href="{{ url_for('main_bp.index') }}">NeTube</a>
+        </h1>
+        <div class="flex-1 flex justify-center mb-4 md:mb-0">
+            <form action="{{ url_for('main_bp.index') }}" method="POST" class="flex w-full max-w-md">
+                <input type="text" name="search_query" placeholder="Поиск..." class="border border-gray-300 rounded-l-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full">
+                <button type="submit" class="bg-blue-500 text-white rounded-r-md px-4 py-2 hover:bg-blue-600">Искать</button>
+            </form>
+        </div>
+        <nav class="flex items-center space-x-4">
+            {% if current_user %}
+                <label for="mini-avatar" id="menu-button" class="cursor-pointer">
+                    <img src="{{ url_for('static_bp.serve_avatars', filename=current_user.avatar) if current_user.avatar else url_for('static_bp.serve_avatars', filename='plus.png') }}" class="w-8 h-8 rounded-full object-cover">
+                </label>
+                <a>•</a>
+                <a href="{{ url_for('video_bp.upload') }}" class="text-blue-500">
+                    <img src="{{ url_for('static_bp.serve_icons', filename='upload.png') }}" class="w-8 h-8">
+                </a>
+                <a>•</a>
+                <a href="{{ url_for('user_bp.logout') }}" class="text-red-500">
+                    <img src="{{ url_for('static_bp.serve_icons', filename='log-out.png') }}" class="w-8 h-8">
+                </a>
+            {% else %}
+                <a href="{{ url_for('user_bp.login') }}">
+                    <img src="{{ url_for('static_bp.serve_icons', filename='question.png') }}" class="w-8 h-8">
+                </a>
+            {% endif %}
+        </nav>
+    </div>
+</header>
+
+    <main class="container mx-auto mt-4">
+
+        <div id="menu-overlay" class="fixed inset-0 bg-gray-900 bg-opacity-75 hidden z-50 flex justify-center items-center">
+    <div id="menu-content" class="bg-white w-96 p-6 rounded-lg shadow-lg">
+        <!-- User Info Block -->
+        <div class="menu-block">
+            <div class="user-info flex items-center space-x-4">
+                {% if current_user %}
+                    <div class="flex-shrink-0">
+                        <form action="{{ url_for('channel_bp.upload_avatar', username=current_user.username) }}" method="POST" enctype="multipart/form-data" class="inline-block">
+                            <label for="avatar" id="avatar-button" class="cursor-pointer">
+                                <img src="{{ url_for('static_bp.serve_avatars', filename=current_user.avatar) if current_user.avatar else url_for('static_bp.serve_avatars', filename='plus.png') }}"
+                                     class="w-16 h-16 rounded-full object-cover border border-gray-300"
+                                     alt="Avatar">
+                            </label>
+                            <input type="file" id="avatar" name="avatar" class="hidden">
+                        </form>
+                    </div>
+                    <div class="user-details flex-grow">
+                        <span class="username block font-bold">@{{ Markup(current_user.username) }}</span>
+                        <span class="text-gray-500">{{ current_user.subscribers.count() }} подписчиков</span>
+                    </div>
+                    <div class="vert-separator h-12 w-px bg-gray-300 mx-2"></div>
+                    <a href="{{ url_for('channel_bp.channel', username=current_user.username) }}" class="text-blue-600 whitespace-nowrap overflow-hidden text-ellipsis">Перейти на канал</a>
+                {% else %}
+                    <a href="{{ url_for('user_bp.login') }}">
+                        <img src="{{ url_for('static_bp.serve_avatars', filename='question.png') }}" class="w-16 h-16 rounded-full border border-gray-300" alt="Login">
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Separator -->
+        <div class="separator border-t border-gray-300 my-4"></div>
+
+        <!-- Menu Block -->
+        <div class="menu-block space-y-4">
+            <a class="flex items-center space-x-3 cursor-pointer">
+                <img src="{{ url_for('static_bp.serve_icons', filename='changeuser.png') }}" class="w-8 h-8" alt="Change User">
+                <span>Ваши данные на NeTube</span>
+            </a>
+            <a href="{{ url_for('user_bp.login') }}" class="flex items-center space-x-3 cursor-pointer">
+                <img src="{{ url_for('static_bp.serve_icons', filename='switchacc.png') }}" class="w-8 h-8" alt="Switch Account">
+                <span>Сменить аккаунт</span>
+            </a>
+            <a href="{{ url_for('user_bp.logout') }}" class="flex items-center space-x-3 cursor-pointer">
+                <img src="{{ url_for('static_bp.serve_icons', filename='log-out.png') }}" class="w-8 h-8" alt="Logout">
+                <span>Выйти</span>
+            </a>
+        </div>
+
+        <!-- Separator -->
+        <div class="separator border-t border-gray-300 my-4"></div>
+
+        <!-- Settings Block -->
+        <div class="menu-block space-y-2">
+            <p>Тема: Светлая</p>
+            <p>Язык: Русский</p>
+            <p>Настройки</p>
+        </div>
+    </div>
+</div>
+
+
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <script>
+    const menuButton = document.getElementById('menu-button');
+    const menuOverlay = document.getElementById('menu-overlay');
+
+    menuButton.addEventListener('click', (event) => {
+                event.stopPropagation()
+        menuOverlay.classList.toggle('hidden');
+    });
+
+    menuOverlay.addEventListener('click', (event) => {
+             if (event.target === menuOverlay) {
+                 event.stopPropagation()
+                 menuOverlay.classList.add('hidden');
+             }
+    });
+
+    document.getElementById('avatar').addEventListener('change', function() {
+        console.log("Файл выбран:", this.files[0].name);
+        handleAvatarChange(); // Вызываем функцию, чтобы отправить форму
+    });
+
+    function handleAvatarChange() {
+        const fileInput = document.getElementById('avatar');
+        const form = fileInput.closest('form');
+        if (fileInput.files && fileInput.files[0]) {
+            form.submit();
+        }
+    }
+
+    </script>
+</body>
+</html>

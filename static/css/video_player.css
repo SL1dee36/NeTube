@@ -1,0 +1,41 @@
+#settingsMenu {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+/* Контейнер плеера */
+#videoPlayerContainer {
+    position: relative;
+    width: 100%;
+    height: 600px; /* Высота для обычного режима */
+    background: black; /* Черный фон для черных полос */
+    overflow: hidden;
+}
+
+/* Видео */
+#NeTubeVideoPlayer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Сохранение соотношения сторон */
+}
+
+/* Полноэкранный режим */
+#videoPlayerContainer.fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh; /* Высота во весь экран */
+    z-index: 9999; /* Положение поверх других элементов */
+    margin: 0;
+    padding: 0;
+    background: black;
+}
+
+#NeTubeVideoPlayer.fullscreen {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Сохранение соотношения сторон в полноэкранном режиме */
+}

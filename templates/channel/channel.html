@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-100">
+
+    <!-- Контейнер канала -->
+    <div class="p-6 bg-white shadow-lg rounded-lg">
+
+        <!-- Заголовок с именем пользователя и количеством подписчиков -->
+        <div class="text-center mb-6">
+            <h2 class="text-2xl font-bold text-gray-800">@{{ user.username }}</h2>
+            <p class="subscribers text-sm text-gray-500">{{ user.subscribers.count() }} подписчиков</p>
+
+            <!-- Кнопка подписки/отписки -->
+            {% if current_user and current_user.username != user.username %}
+                        <button id="subscribe-button" class="ml-4 px-4 py-2 rounded-full border bg-gray-300 hover:bg-gray-400" data-user-id="{{ user.id }}">
+                    {% if current_user and user in current_user.subscribed_to %}
+                                Отписаться
+                            {% else %}
+                                Подписаться
+                            {% endif %}
+                        </button>
+                    {% endif %}
+        </div>
+
+        <!-- Контейнер видео -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+
+            {% for video in videos %}
+                <div class="video-preview bg-white shadow-md rounded-lg hover:shadow-xl transition duration-300">
+
+                    <!-- Превью видео -->
+                    <a href="{{ url_for('video_bp.video', video_name=video.url) }}" class="block">
+                        <img src="{{ url_for('static_bp.serve_thumbnails', filename=video.url[:-4] + '.jpg') }}" alt="{{ video.title }}" class="w-full h-48 object-cover rounded-t-lg">
+                    </a>
+
+                    <!-- Описание видео -->
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800">
+                            <a href="{{ url_for('channel_bp.channel', username=video.author.username) }}" class="flex items-center space-x-2">
+                                <img src="{{ url_for('static_bp.serve_avatars', filename=video.author.avatar) if video.author.avatar else url_for('static_bp.serve_avatars', filename='plus.png') }}" class="w-8 h-8 rounded-full object-cover">
+                                <span>{{ video.title }}</span>
+                            </a>
+                        </h3>
+                        <p class="text-sm text-gray-600">
+                            <a href="{{ url_for('channel_bp.channel', username=video.author.username) }}" class="hover:underline">@{{ video.author.username }} • {{ video.views }} просмотров • {{ video.likes }} лайков</a>
+                        </p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='js/subscribe_handler.js') }}"></script>
+{% endblock %}
